@@ -22,10 +22,16 @@ void setup(HMODULE hModule)
         error_occured = true;
     }
 
+    // checks for f/s patch
+    if (*(int*)offsets::update_judge_data == 0xCCCCCCCC) {
+        MessageBoxA(0, "F/S patch is required", "Incompatible Version", MB_OK | MB_ICONERROR);
+        error_occured = true;
+    }
+
     config::LoadConfig();
     hooks::Setup();
 
-    while(!GetAsyncKeyState(VK_END) || error_occured) {
+    while(!GetAsyncKeyState(VK_END) && !error_occured) {
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 
