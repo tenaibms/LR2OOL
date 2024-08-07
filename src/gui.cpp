@@ -336,7 +336,7 @@ void gui::Render()
         hiterror::Render();
 
 #if _DEBUG
-    ImGui::ShowDemoWindow(); // too useful...
+    //ImGui::ShowDemoWindow(); // too useful...
 #endif
 
     ImGui::EndFrame();

@@ -11,7 +11,7 @@ namespace offsets {
     const inline uintptr_t random = 0xDC35C;
     const inline uintptr_t current_opt = 0x0FF848;
     const inline uintptr_t mirror = 0x433A5A;
-    const inline uintptr_t update_judge_data = 0x44FAE3;
+    const inline uintptr_t update_judge_data = 0x405FB0;
     const inline uintptr_t change_gamestate = 0x431BB9;
     const inline uintptr_t cursor_patch = 0x4D09E0;
     const inline uintptr_t internal_resolution = 0x7A3B50;
@@ -35,7 +35,8 @@ namespace hooks {
     inline SafetyHookMid gamestate_hook;
 
     // judge hook
-    inline SafetyHookMid judge_hook;
+    inline SafetyHookInline judge_hook;
+    int __cdecl hook_judge(int judgement, int a2, int a3, int a4, int a5, char a6);
 
     // src number hook
     inline SafetyHookInline src_number_hook;

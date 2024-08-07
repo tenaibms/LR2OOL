@@ -22,7 +22,8 @@ void setup(HMODULE hModule)
         error_occured = true;
     }
 
-    // checks for f/s patch
+    // checks for f/s patch, eventually should move away from requiring it..
+    // however it makes life much easier
     if (*(int*)offsets::update_judge_data == 0xCCCCCCCC) {
         MessageBoxA(0, "F/S patch is required", "Incompatible Version", MB_OK | MB_ICONERROR);
         error_occured = true;

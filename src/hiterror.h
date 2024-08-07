@@ -3,6 +3,15 @@
 #include <imgui.h>
 #include "hooks.h"
 
+enum class JUDGEMENT {
+    empty_poor,
+    miss_poor,
+    bad,
+    good,
+    great,
+    pgreat
+};
+
 namespace hiterror {
     inline bool open = false;
     inline bool config = false;
@@ -26,9 +35,11 @@ namespace hiterror {
 
     #define BUFFER_MAX_SIZE 128
     struct note_delta {
-        int8_t delta;
+        int delta;
+        JUDGEMENT judgement;
         float opacity;
     };
+
     inline size_t buffer_current = 0;
     inline note_delta buffer[BUFFER_MAX_SIZE];
 
@@ -44,8 +55,8 @@ namespace hiterror {
 
     void Render();
 
-    void InsertBuffer(int8_t delta);
+    void InsertBuffer(int delta, JUDGEMENT judgement);
     void ClearBuffer();
 
-    void UpdateEma(int8_t value);
+    void UpdateEma(int value);
 }

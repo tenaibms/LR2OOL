@@ -13,6 +13,31 @@ int __cdecl hooks::hook_cursor(int enabled)
     return cursor_hook.call<int>(enabled);
 }
 
+int __cdecl hooks::hook_judge(int a1, int a2, int a3, int a4, int a5, char a6)
+{
+    // todo: clean this up
+    int result = judge_hook.ccall<int>(a1, a2, a3, a4, a5, a6);
+    JUDGEMENT judgement = static_cast<JUDGEMENT>(a1);
+    if (judgement == JUDGEMENT::miss_poor)
+        return result; // don't handle miss poors
+    
+    int hit_timing = *reinterpret_cast<int*>(0x127300);
+    int note_timing = *reinterpret_cast<int*>(0x127304);
+    int judgement_delta = (hit_timing - note_timing); // order matters here, early hits should be negative
+    
+    // we don't want to clutter our timing metrics with empty poors as they can significantly skew the data
+    if(judgement != JUDGEMENT::empty_poor) {
+        hiterror::UpdateEma(judgement_delta);
+        src_numbers::mean.Insert(judgement_delta);
+        src_numbers::stddev.Insert(judgement_delta);
+    }
+
+    // however we still want them to show up on our graph
+    hiterror::InsertBuffer(std::clamp(judgement_delta, -255, 255), static_cast<JUDGEMENT>(a1));
+
+    return result;
+}
+
 int hooks::hook_src_number(uintptr_t* data_ptr, uint32_t id)
 {
     switch (id) {
@@ -49,16 +74,12 @@ int hooks::hook_src_number(uintptr_t* data_ptr, uint32_t id)
 
 void hooks::Setup()
 {
-    judge_hook = safetyhook::create_mid(reinterpret_cast<void*>(offsets::update_judge_data), [](safetyhook::Context& ctx) {
-        hiterror::UpdateEma((int8_t)ctx.eax);
-        hiterror::InsertBuffer((int8_t)ctx.eax);
-        src_numbers::mean.Insert((int8_t)ctx.eax); // order matters here!
-        src_numbers::stddev.Insert((int8_t)ctx.eax);
-        });
+    judge_hook = safetyhook::create_inline(reinterpret_cast<void*>(offsets::update_judge_data), reinterpret_cast<void*>(hook_judge));
 
     gamestate_hook = safetyhook::create_mid(reinterpret_cast<void*>(offsets::change_gamestate), [](safetyhook::Context& ctx) {
         if (ctx.eax == 2) { // todo: convert this game state into an enum and create helper functions instead of setting these variables directly
             hiterror::open = true;
+            hiterror::buffer_current = 0;
             src_numbers::mean = statistics::OnlineMean();
             src_numbers::stddev = statistics::OnlineStandardDeviation();
         } else {

@@ -3,19 +3,6 @@
 #include "gui.h"
 #include <imgui.h>
 
-void hiterror::InsertBuffer(int8_t delta)
-{
-    buffer[buffer_current % (lines - 1)] = note_delta{ delta, 255.0f };
-    ++buffer_current;
-}
-
-void hiterror::ClearBuffer()
-{
-    for (int i = 0; i < BUFFER_MAX_SIZE; ++i) {
-        buffer[i] = { 0, 0.f };
-    }
-}
-
 ImU32 ReplaceAlpha(ImU32 color, float alpha)
 {
     color = color & ~IM_COL32_A_MASK; // take inverse of mask to remove the alpha channel
@@ -52,14 +39,20 @@ void hiterror::Render()
                 for (size_t i = 0; i < lines; ++i) {
                     ImU32 color = IM_COL32(255, 255, 255, 255);
 
-                    if (abs(buffer[i].delta) <= windows::pgreat)
+                    switch(buffer[i].judgement) {
+                    case JUDGEMENT::pgreat:
                         color = ReplaceAlpha(colors::pgreat, buffer[i].opacity);
-                    else if (abs(buffer[i].delta) <= windows::great)
+                        break;
+                    case JUDGEMENT::great:
                         color = ReplaceAlpha(colors::great, buffer[i].opacity);
-                    else if (abs(buffer[i].delta) <= windows::good)
+                        break;
+                    case JUDGEMENT::good:
                         color = ReplaceAlpha(colors::good, buffer[i].opacity);
-                    else
+                        break;
+                    default:
                         color = ReplaceAlpha(colors::cb, buffer[i].opacity);
+                        break;
+                    }
 
                     draw_list->AddRectFilled(
                         ImVec2{ center.x - (thickness / 2) + x + buffer[i].delta * (width / 256.0f), y },
@@ -80,7 +73,20 @@ void hiterror::Render()
     }
 }
 
-void hiterror::UpdateEma(int8_t value)
+void hiterror::UpdateEma(int value)
 {
     ema = ema + (alpha * (value - ema));
+}
+
+void hiterror::InsertBuffer(int delta, JUDGEMENT judgement)
+{
+    buffer[buffer_current % lines] = note_delta{ delta, judgement, 255.0f };
+    ++buffer_current;
+}
+
+void hiterror::ClearBuffer()
+{
+    for (int i = 0; i < BUFFER_MAX_SIZE; ++i) {
+        buffer[i] = { 0, JUDGEMENT::pgreat, 0.f };
+    }
 }
