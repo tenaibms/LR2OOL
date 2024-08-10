@@ -31,7 +31,7 @@ void hiterror::Render()
                 draw_list->AddRectFilled(
                     ImVec2{ center.x - (thickness / 2) + x + hiterror::ema * (width / 256.0f), y },
                     ImVec2{ center.x + (thickness / 2) + x + hiterror::ema * (width / 256.0f), size.y + y },
-                    ReplaceAlpha(colors::ema, 255)
+                    colors::ema
                 );
             }
             else {

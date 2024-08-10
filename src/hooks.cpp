@@ -80,6 +80,7 @@ void hooks::Setup()
         if (ctx.eax == 2) { // todo: convert this game state into an enum and create helper functions instead of setting these variables directly
             hiterror::open = true;
             hiterror::buffer_current = 0;
+            hiterror::ema = 0;
             src_numbers::mean = statistics::OnlineMean();
             src_numbers::stddev = statistics::OnlineStandardDeviation();
         } else {
