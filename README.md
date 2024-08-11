@@ -1,5 +1,7 @@
 # LR2OOL
+[![MSBuild](https://github.com/tenaibms/LR2OOL/actions/workflows/msbuild.yml/badge.svg)](https://github.com/tenaibms/LR2OOL/actions/workflows/msbuild.yml)
 
+## Outline
 This tool adds basic some quality of life to LR2. Including:
 - Mirroring courses
 - Configurable Hit-error bar
