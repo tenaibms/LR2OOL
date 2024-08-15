@@ -14,4 +14,4 @@ The version of the game you inject it into must contain the F/S patch.
 ⚠️Do note that this software is still in development, and is currently very experimental. It is likely you will encounter bugs. Please report them!
 
 ## Preview
-![LRHbody_Sdpb0nZyrw](https://github.com/user-attachments/assets/f8f0a277-f268-4cfb-9920-b1b037ba634d)
+![image](https://github.com/user-attachments/assets/50e24f2a-52d6-4ded-a86e-e6222ede6df5)
