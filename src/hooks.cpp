@@ -38,7 +38,16 @@ int __cdecl hooks::hook_judge(int a1, int a2, int a3, int a4, int a5, char a6)
     return result;
 }
 
-int hooks::hook_src_number(uintptr_t* data_ptr, uint32_t id)
+int GetWhole(double num)
+{
+    return (int) num;
+}
+int GetDecimal(double num)
+{
+    return abs((int)100*(num - (int)num));
+}
+
+int hooks::hook_src_number(uintptr_t* data_ptr, int id)
 {
     switch (id) {
     case 295: // current random
@@ -54,22 +63,46 @@ int hooks::hook_src_number(uintptr_t* data_ptr, uint32_t id)
         break;
     }
     case 296: // whole part of mean
-        return (int)src_numbers::mean.GetMean();
+        return GetWhole(src_numbers::mean.GetMean());
         break;
     case 297: // decimal part of mean
-        return abs((int)100*(src_numbers::mean.GetMean() - (int) src_numbers::mean.GetMean()));
+        return GetDecimal(src_numbers::mean.GetMean());
         break;
     case 298: // whole part of stddev
-        return (int)src_numbers::stddev.GetPopulationStandardDeviation();
+        return GetWhole(src_numbers::stddev.GetPopulationStandardDeviation());
         break;
     case 299: // decimal part of stddev
-        return abs((int)100 * (src_numbers::stddev.GetPopulationStandardDeviation() - (int)src_numbers::stddev.GetPopulationStandardDeviation()));
+        return GetDecimal(src_numbers::stddev.GetPopulationStandardDeviation());
+        break;
+    case 400: // whole part of pgreat ratio
+        return GetWhole((double)hooks::src_number_hook.call<int>(data_ptr, 110) / (double)hooks::src_number_hook.call<int>(data_ptr, 111));
+        break;
+    case 401: // decimal part of pgreat ratio
+        return GetDecimal((double)hooks::src_number_hook.call<int>(data_ptr, 110) / (double)hooks::src_number_hook.call<int>(data_ptr, 111));
+        break;
+    case 402: // whole part of great ratio
+        return GetWhole((double)hooks::src_number_hook.call<int>(data_ptr, 111) / (double)hooks::src_number_hook.call<int>(data_ptr, 112));
+        break;
+    case 403: // decimal part of great ratio
+        return GetDecimal((double)hooks::src_number_hook.call<int>(data_ptr, 111) / (double)hooks::src_number_hook.call<int>(data_ptr, 112));
         break;
     default:
         return src_number_hook.call<int>(data_ptr, id);
         break;
     }
     return 0;
+}
+
+int __cdecl hooks::hook_save_replay(uint32_t* replay, int a2, void* ArgList)
+{
+    if(save_replay_hook_enabled) {
+        uint8_t* replay_gauge = ((uint8_t*)(*replay + 0x50));
+        uint8_t current_gauge = *((uint8_t*)(offsets::current_guage));
+        if (*replay_gauge != current_gauge) {
+            *replay_gauge = current_gauge;
+        }
+    }
+    return save_replay_hook.ccall<int>(replay, a2, ArgList);
 }
 
 void hooks::Setup()
@@ -101,8 +134,19 @@ void hooks::Setup()
     });
 
     src_number_hook = safetyhook::create_inline(reinterpret_cast<void*>(offsets::src_number), reinterpret_cast<void*>(hook_src_number));
+
+    save_replay_hook = safetyhook::create_inline(reinterpret_cast<void*>(offsets::save_replay), reinterpret_cast<void*>(hook_save_replay));
 }
 
 void hooks::Destroy()
 {
+#define O(x) x = {}
+    O(judge_hook);
+    O(gamestate_hook);
+    O(cursor_hook);
+    O(mirror_hook);
+    O(reset_hook);
+    O(src_number_hook);
+    O(save_replay_hook);
+#undef O
 }

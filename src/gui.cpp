@@ -2,6 +2,8 @@
 #include "config.h"
 #include "hooks.h"
 #include "hiterror.h"
+#include "version.h"
+#include "imguistyle.h"
 #include <Windows.h>
 
 #include <imgui.h>
@@ -15,6 +17,18 @@
 
 #include <format>
 #include <print>
+
+static void HelpMarker(const char* desc)
+{
+    ImGui::TextDisabled("(?)");
+    if (ImGui::BeginItemTooltip())
+    {
+        ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+        ImGui::TextUnformatted(desc);
+        ImGui::PopTextWrapPos();
+        ImGui::EndTooltip();
+    }
+}
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 LRESULT CALLBACK window_process(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -252,6 +266,8 @@ void gui::SetupMenu(LPDIRECT3DDEVICE9 device) noexcept
     ImGui_ImplWin32_Init(window);
     ImGui_ImplDX9_Init(device);
 
+    SetStyleGrey();
+
     ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(1.f, 1.f));
 
     setup = true;
@@ -279,20 +295,50 @@ void gui::Render()
     ImGui::NewFrame();
     
     // probably should split this into more functions
+    // 
+    // popup
 
-    if(open) {
+    ImGuiIO& io = ImGui::GetIO();
+    popup_timer += io.DeltaTime;
+
+    if (popup_timer > 5)
+        popup_opacity = FadeOut(popup_opacity, 1.0f, 0.0f, 2.5, io.DeltaTime);
+
+    int* internal_resolution = reinterpret_cast<int*>(offsets::internal_resolution);
+
+    ImGui::SetNextWindowPos({ 1 - ImGui::GetStyle().WindowPadding.x - ImGui::GetStyle().WindowBorderSize , -1 + internal_resolution[1] - io.Fonts->Fonts[0]->FontSize - (2 * ImGui::GetStyle().FramePadding.y)});
+    ImGui::Begin("popup", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav);
+    ImGui::TextColored({1.0, 1.0f, 1.0f, popup_opacity}, "LR2OOL v%i.%i.%i loaded! Press <Insert> to display the menu.", version.major, version.minor, version.patch);
+    ImGui::End();
+
+    // Background Dim
+    ImDrawList* list = ImGui::GetBackgroundDrawList();
+    list->AddRectFilled({ 0, 0 }, { (float)internal_resolution[0], (float)internal_resolution[1] }, IM_COL32(0, 0, 0, gui_opacity*192));
+
+    ImGui::GetStyle().Alpha = gui_opacity;
+
+    if (open)
+        gui_opacity = FadeIn(gui_opacity, 1.0f, 0.0f, 0.2f, io.DeltaTime);
+    else
+        gui_opacity = FadeOut(gui_opacity, 1.0f, 0.0f, 0.2f, io.DeltaTime);
+
+    // doing it like this allows fade out.. but I have a feeling there is a better way
+    if (gui_opacity != 0.f)
+    {
         ImGui::SetNextWindowSize(ImVec2{ 0,0 });
-        if (ImGui::Begin("LR2OOL", &open, ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoResize)) {
+        if (ImGui::Begin(std::format("LR2OOL v{}.{}.{}", version.major, version.minor, version.patch).c_str(), &open, ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoResize)) {
             ImGui::SeparatorText("Hooks");
                 ImGui::Checkbox("Allow Course Mirroring", &hooks::mirror_hook_enabled);
+                ImGui::Checkbox("Fix GAS Replays", &hooks::save_replay_hook_enabled);
+                ImGui::SameLine(); HelpMarker("Patches GAS replays to use the gauge you ended with, will do nothing if gauge doesn't change.");
 
             ImGui::SeparatorText("Hit Error");
                 ImGui::Checkbox("Show In Menu", &hiterror::config);
-                ImGui::SameLine();
+                ImGui::SameLine(); HelpMarker("This lets you view hit error bar whenever the menu is opened.");
                 ImGui::Checkbox("Use EMA", &hiterror::using_ema);
                 ImGui::SliderInt("Width", &hiterror::width, 50, 500);
                 hiterror::bg_enabled = ImGui::IsItemHovered();
-                ImGui::SliderInt("Height", &hiterror::height, 10, 50);
+                ImGui::SliderInt("Height", &hiterror::height, 2, 50);
                 ImGui::SliderInt("Thickness", &hiterror::thickness, 2, 20);
 
                 ImGui::BeginDisabled(hiterror::using_ema);
@@ -333,15 +379,20 @@ void gui::Render()
         }
     }
 
-        hiterror::Render();
+    ImGui::GetStyle().Alpha = 1.0;
 
-#if _DEBUG
-    //ImGui::ShowDemoWindow(); // too useful...
-#endif
+    hiterror::Render();
 
     ImGui::EndFrame();
     ImGui::Render();
     ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
+}
+
+ImU32 gui::ReplaceAlpha(ImU32 color, float alpha)
+{
+    color = color & ~IM_COL32_A_MASK; // take inverse of mask to remove the alpha channel
+    color += ((uint32_t)(alpha)) << IM_COL32_A_SHIFT;
+    return color;
 }
 
 LRESULT CALLBACK window_process(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) 

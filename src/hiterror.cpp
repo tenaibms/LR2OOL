@@ -3,13 +3,6 @@
 #include "gui.h"
 #include <imgui.h>
 
-ImU32 ReplaceAlpha(ImU32 color, float alpha)
-{
-    color = color & ~IM_COL32_A_MASK; // take inverse of mask to remove the alpha channel
-    color += ((uint32_t)(alpha)) << IM_COL32_A_SHIFT;
-    return color;
-}
-
 void hiterror::Render()
 {
     if (hiterror::open || (hiterror::config && gui::open)) {
@@ -31,7 +24,7 @@ void hiterror::Render()
                 draw_list->AddRectFilled(
                     ImVec2{ center.x - (thickness / 2) + x + hiterror::ema * (width / 256.0f), y },
                     ImVec2{ center.x + (thickness / 2) + x + hiterror::ema * (width / 256.0f), size.y + y },
-                    ReplaceAlpha(colors::ema, 255)
+                    gui::ReplaceAlpha(colors::ema, 255)
                 );
             }
             else {
@@ -41,16 +34,16 @@ void hiterror::Render()
 
                     switch(buffer[i].judgement) {
                     case JUDGEMENT::pgreat:
-                        color = ReplaceAlpha(colors::pgreat, buffer[i].opacity);
+                        color = gui::ReplaceAlpha(colors::pgreat, buffer[i].opacity);
                         break;
                     case JUDGEMENT::great:
-                        color = ReplaceAlpha(colors::great, buffer[i].opacity);
+                        color = gui::ReplaceAlpha(colors::great, buffer[i].opacity);
                         break;
                     case JUDGEMENT::good:
-                        color = ReplaceAlpha(colors::good, buffer[i].opacity);
+                        color = gui::ReplaceAlpha(colors::good, buffer[i].opacity);
                         break;
                     default:
-                        color = ReplaceAlpha(colors::cb, buffer[i].opacity);
+                        color = gui::ReplaceAlpha(colors::cb, buffer[i].opacity);
                         break;
                     }
 

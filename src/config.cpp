@@ -12,6 +12,7 @@ void config::LoadConfig()
 {
     if (file.read(ini)) {
         hooks::mirror_hook_enabled = ini["hooks"]["mirror"] == "true" ? true : false;
+        hooks::save_replay_hook_enabled = ini["hooks"]["replay"] == "true" ? true : false;
 
         hiterror::width			= stoi(ini["hit_error"]["width"]);
         hiterror::height		= stoi(ini["hit_error"]["height"]);
@@ -32,7 +33,9 @@ void config::LoadConfig()
 }
 
 void config::SaveConfig() {
-    ini["hooks"]["mirror"] = hooks::mirror_hook ? "true" : "false";
+    ini["hooks"]["mirror"] = hooks::mirror_hook_enabled ? "true" : "false";
+    ini["hooks"]["replay"] = hooks::save_replay_hook_enabled ? "true" : "false";
+
 
     ini["hit_error"]["width"]	  = TS(hiterror::width);
     ini["hit_error"]["height"]	  = TS(hiterror::height);

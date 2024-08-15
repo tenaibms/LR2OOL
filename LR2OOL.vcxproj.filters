@@ -30,6 +30,7 @@
     <ClCompile Include="src\statistics.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\imguistyle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\config.h">
@@ -49,6 +50,12 @@
     </ClInclude>
     <ClInclude Include="src\statistics.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\version.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imguistyle.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

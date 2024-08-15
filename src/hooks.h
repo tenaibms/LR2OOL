@@ -19,6 +19,8 @@ namespace offsets {
     const inline uintptr_t great_window = 0x197270;
     const inline uintptr_t good_window = 0x19726C;
     const inline uintptr_t bad_window = 0x197264;
+    const inline uintptr_t save_replay = 0x4C09E0;
+    const inline uintptr_t current_guage = 0x00FF840;
 }
 
 namespace hooks {
@@ -40,7 +42,12 @@ namespace hooks {
 
     // src number hook
     inline SafetyHookInline src_number_hook;
-    int hook_src_number(uintptr_t* data_ptr, uint32_t id);
+    int hook_src_number(uintptr_t* data_ptr, int id);
+
+    // replay save fix hook hook
+    inline bool save_replay_hook_enabled = false;
+    inline SafetyHookInline save_replay_hook;
+    int __cdecl hook_save_replay(uint32_t* replay, int a2, void* ArgList);
 
     void Setup();
     void Destroy();
