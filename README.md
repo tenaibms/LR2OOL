@@ -4,7 +4,7 @@
 ## Outline
 This tool adds basic some quality of life to LR2. Including:
 - Mirroring courses
-- Configurable Hit-error bar
+- Configurable hit-error bar
 - Additional `#SRC_NUMBERS` for useful timing metrics, among other things
 
 ## Installation
