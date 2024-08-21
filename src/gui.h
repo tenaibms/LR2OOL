@@ -5,17 +5,6 @@
 #include <imgui_internal.h>
 
 namespace gui {
-    // popup
-    inline float popup_timer = 0;
-    inline float popup_opacity = 1.0f;
-
-    // gui settings
-    inline float gui_opacity = 0.f;
-
-    // show menu?
-    inline bool open = false;
-    inline bool about_open = false;
-
     // is menu ready to be shown?
     inline bool setup = false;
 
@@ -27,13 +16,6 @@ namespace gui {
     // directX stuff
     inline LPDIRECT3DDEVICE9 device = nullptr;
     inline LPDIRECT3D9 d3d9 = nullptr;
-
-    // helper functions
-    float FadeOut(float current_opacity, float max_opacity, float min_opacity, float fade_time, float delta_time);
-    float FadeIn(float current_opacity, float max_opacity, float min_opacity, float fade_time, float delta_time);
-    ImU32 ReplaceAlpha(ImU32 color, float alpha);
-
-    bool ColorEdit3U32(const char* label, ImU32* color, ImGuiColorEditFlags flags = 0);
 
     bool SetupWindowClass(const char* window_class_name) noexcept;
     void DestroyWindowClass() noexcept;

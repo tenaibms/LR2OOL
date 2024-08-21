@@ -3,13 +3,13 @@
 #include <numeric>
 
 #include "hooks.h"
-#include "gui.h"
+#include "overlay.h"
 #include "hiterror.h"
 #include "statistics.h"
 
 int __cdecl hooks::hook_cursor(int enabled)
 {
-    if(gui::open)
+    if(overlay::open)
         return cursor_hook.call<int>(1);
     return cursor_hook.call<int>(enabled);
 }

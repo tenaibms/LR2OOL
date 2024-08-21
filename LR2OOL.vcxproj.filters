@@ -7,6 +7,15 @@
     <Filter Include="Header Files">
       <UniqueIdentifier>{baecb7d9-9a17-463c-af0b-6472a3176ea6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\overlay">
+      <UniqueIdentifier>{8d7aa926-414b-428d-b7be-ca190109f01e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\hooks">
+      <UniqueIdentifier>{70955d00-728d-4e8f-a03a-c7701c560ea3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\utils">
+      <UniqueIdentifier>{71c35280-072d-4135-bf5e-dcf5e2da9da3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\config.cpp">
@@ -15,47 +24,55 @@
     <ClCompile Include="src\dllmain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\dx9.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\gui.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\hiterror.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\overlay</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imguistyle.cpp">
+      <Filter>Source Files\overlay</Filter>
+    </ClCompile>
+    <ClCompile Include="src\overlay.cpp">
+      <Filter>Source Files\overlay</Filter>
     </ClCompile>
     <ClCompile Include="src\hooks.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\hooks</Filter>
     </ClCompile>
     <ClCompile Include="src\statistics.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\utils</Filter>
     </ClCompile>
-    <ClCompile Include="src\imguistyle.cpp" />
+    <ClCompile Include="src\dx9.cpp">
+      <Filter>Source Files\hooks</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gui.cpp">
+      <Filter>Source Files\hooks</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\config.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\dx9.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\gui.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\hiterror.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\hooks.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\statistics.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\version.h">
-      <Filter>Source Files</Filter>
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\overlay.h">
+      <Filter>Source Files\overlay</Filter>
     </ClInclude>
     <ClInclude Include="src\imguistyle.h">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\overlay</Filter>
+    </ClInclude>
+    <ClInclude Include="src\hiterror.h">
+      <Filter>Source Files\overlay</Filter>
+    </ClInclude>
+    <ClInclude Include="src\statistics.h">
+      <Filter>Source Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gui.h">
+      <Filter>Source Files\hooks</Filter>
+    </ClInclude>
+    <ClInclude Include="src\hooks.h">
+      <Filter>Source Files\hooks</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dx9.h">
+      <Filter>Source Files\hooks</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

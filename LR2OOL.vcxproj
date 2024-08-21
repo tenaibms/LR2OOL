@@ -159,6 +159,7 @@
     <ClCompile Include="src\hiterror.cpp" />
     <ClCompile Include="src\hooks.cpp" />
     <ClCompile Include="src\imguistyle.cpp" />
+    <ClCompile Include="src\overlay.cpp" />
     <ClCompile Include="src\statistics.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -168,6 +169,7 @@
     <ClInclude Include="src\hiterror.h" />
     <ClInclude Include="src\hooks.h" />
     <ClInclude Include="src\imguistyle.h" />
+    <ClInclude Include="src\overlay.h" />
     <ClInclude Include="src\statistics.h" />
     <ClInclude Include="src\version.h" />
   </ItemGroup>

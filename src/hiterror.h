@@ -17,6 +17,7 @@ namespace hiterror {
     inline bool config = false;
     inline bool using_ema = true;
     inline bool bg_enabled = false;
+    inline bool hovered = false;
 
     inline int width = 300;
     inline int thickness = 4;
