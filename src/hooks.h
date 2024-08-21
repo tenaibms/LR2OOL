@@ -3,6 +3,7 @@
 #include <vector>
 #include <stdint.h>
 #include "statistics.h"
+#include <Windows.h>
 
 // TODO: clean this up
 
@@ -21,6 +22,7 @@ namespace offsets {
     const inline uintptr_t bad_window = 0x197264;
     const inline uintptr_t save_replay = 0x4C09E0;
     const inline uintptr_t current_guage = 0x00FF840;
+    //const inline uintptr_t wind_proc = 0x4CB5C0;
 }
 
 namespace hooks {
@@ -48,6 +50,10 @@ namespace hooks {
     inline bool save_replay_hook_enabled = false;
     inline SafetyHookInline save_replay_hook;
     int __cdecl hook_save_replay(uint32_t* replay, int a2, void* ArgList);
+
+    // wind_proc hook
+    inline SafetyHookInline wind_proc_hook;
+    LRESULT __stdcall hook_wind_proc(HWND hWnd, UINT Msg, __int64 wParam);
 
     void Setup();
     void Destroy();

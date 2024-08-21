@@ -1,4 +1,5 @@
 #include <vector>
+
 #include <numeric>
 
 #include "hooks.h"
@@ -105,6 +106,16 @@ int __cdecl hooks::hook_save_replay(uint32_t* replay, int a2, void* ArgList)
     return save_replay_hook.ccall<int>(replay, a2, ArgList);
 }
 
+/*LRESULT __stdcall hooks::hook_wind_proc(HWND hWnd, UINT msg, __int64 wParam)
+{
+    ImGuiIO &io = ImGui::GetIO();
+    if (gui::open && (msg == WM_LBUTTONDOWN || msg == WM_LBUTTONUP))
+        return 1L;
+    if (gui::open && (msg == WM_KEYDOWN || msg == WM_KEYUP || msg == WM_CHAR || msg == WM_UNICHAR || msg == WM_SYSKEYDOWN))
+        return 1L;
+    return wind_proc_hook.stdcall<LRESULT>(hWnd, msg, wParam);
+}*/
+
 void hooks::Setup()
 {
     judge_hook = safetyhook::create_inline(reinterpret_cast<void*>(offsets::update_judge_data), reinterpret_cast<void*>(hook_judge));
@@ -136,6 +147,8 @@ void hooks::Setup()
     src_number_hook = safetyhook::create_inline(reinterpret_cast<void*>(offsets::src_number), reinterpret_cast<void*>(hook_src_number));
 
     save_replay_hook = safetyhook::create_inline(reinterpret_cast<void*>(offsets::save_replay), reinterpret_cast<void*>(hook_save_replay));
+
+    //wind_proc_hook = safetyhook::create_inline(reinterpret_cast<void*>(offsets::wind_proc), reinterpret_cast<void*>(hook_wind_proc));
 }
 
 void hooks::Destroy()

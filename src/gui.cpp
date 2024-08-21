@@ -160,22 +160,21 @@ void gui::DestroyWindow() noexcept
 
 bool gui::SetupDirectX() noexcept
 {
-    const auto handle = GetModuleHandle("d3d9.dll");
-
-    if (!handle)
-    {
-        return FALSE;
-    }
+    HMODULE handle = nullptr;
+    do {
+        handle = GetModuleHandle("d3d9.dll");
+        Sleep(10);
+    } while (!handle);
 
     using CreateFn = LPDIRECT3D9(__stdcall*)(UINT);
-
-    const auto create = reinterpret_cast<CreateFn>(GetProcAddress(
+    CreateFn create = nullptr;
+    do { 
+        create = reinterpret_cast<CreateFn>(GetProcAddress(
         handle,
         "Direct3DCreate9"
-    ));
-
-    if (!create)
-        return false;
+        ));
+        Sleep(10);
+    } while (!create);
 
     d3d9 = create(D3D_SDK_VERSION);
 
@@ -308,7 +307,11 @@ void gui::Render()
 
     ImGui::SetNextWindowPos({ 1 - ImGui::GetStyle().WindowPadding.x - ImGui::GetStyle().WindowBorderSize , -1 + internal_resolution[1] - io.Fonts->Fonts[0]->FontSize - (2 * ImGui::GetStyle().FramePadding.y)});
     ImGui::Begin("popup", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav);
-    ImGui::TextColored({1.0, 1.0f, 1.0f, popup_opacity}, "LR2OOL v%i.%i.%i loaded! Press <Insert> to display the menu.", version.major, version.minor, version.patch);
+#if _DEBUG
+    ImGui::TextColored({1.0, 1.0f, 1.0f, popup_opacity}, "LR2OOL DEBUG v%i.%i.%i loaded! Press <Insert> to display the menu.", version.major, version.minor, version.patch);
+#else
+    ImGui::TextColored({ 1.0, 1.0f, 1.0f, popup_opacity }, "LR2OOL v%i.%i.%i loaded! Press <Insert> to display the menu.", version.major, version.minor, version.patch);
+#endif
     ImGui::End();
 
     // Background Dim
