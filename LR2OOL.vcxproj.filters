@@ -18,61 +18,77 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\config.cpp">
+    <ClCompile Include="src\config\config.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\dllmain.cpp">
+    <ClCompile Include="src\init.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\hiterror.cpp">
+    <ClCompile Include="src\overlay\hiterror.cpp">
       <Filter>Source Files\overlay</Filter>
     </ClCompile>
-    <ClCompile Include="src\imguistyle.cpp">
+    <ClCompile Include="src\overlay\imguistyle.cpp">
       <Filter>Source Files\overlay</Filter>
     </ClCompile>
-    <ClCompile Include="src\overlay.cpp">
+    <ClCompile Include="src\overlay\overlay.cpp">
       <Filter>Source Files\overlay</Filter>
     </ClCompile>
-    <ClCompile Include="src\hooks.cpp">
+    <ClCompile Include="src\hooks\hooks.cpp">
       <Filter>Source Files\hooks</Filter>
     </ClCompile>
-    <ClCompile Include="src\statistics.cpp">
+    <ClCompile Include="src\utils\statistics.cpp">
       <Filter>Source Files\utils</Filter>
     </ClCompile>
-    <ClCompile Include="src\dx9.cpp">
+    <ClCompile Include="src\graphics\dx9.cpp">
       <Filter>Source Files\hooks</Filter>
     </ClCompile>
-    <ClCompile Include="src\gui.cpp">
+    <ClCompile Include="src\graphics\gui.cpp">
       <Filter>Source Files\hooks</Filter>
     </ClCompile>
+    <ClCompile Include="src\hooks\srcnumber.cpp">
+      <Filter>Source Files\hooks</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hooks\mirror.cpp" />
+    <ClCompile Include="src\hooks\cursor.cpp" />
+    <ClCompile Include="src\hooks\replayfix.cpp" />
+    <ClCompile Include="src\hooks\updategamestate.cpp" />
+    <ClCompile Include="src\hooks\judgement.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\config.h">
+    <ClInclude Include="src\config\config.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\version.h">
+    <ClInclude Include="src\config\version.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\overlay.h">
+    <ClInclude Include="src\overlay\overlay.h">
       <Filter>Source Files\overlay</Filter>
     </ClInclude>
-    <ClInclude Include="src\imguistyle.h">
+    <ClInclude Include="src\overlay\imguistyle.h">
       <Filter>Source Files\overlay</Filter>
     </ClInclude>
-    <ClInclude Include="src\hiterror.h">
+    <ClInclude Include="src\overlay\hiterror.h">
       <Filter>Source Files\overlay</Filter>
     </ClInclude>
-    <ClInclude Include="src\statistics.h">
+    <ClInclude Include="src\utils\statistics.h">
       <Filter>Source Files\utils</Filter>
     </ClInclude>
-    <ClInclude Include="src\gui.h">
+    <ClInclude Include="src\graphics\gui.h">
       <Filter>Source Files\hooks</Filter>
     </ClInclude>
-    <ClInclude Include="src\hooks.h">
+    <ClInclude Include="src\hooks\hooks.h">
       <Filter>Source Files\hooks</Filter>
     </ClInclude>
-    <ClInclude Include="src\dx9.h">
+    <ClInclude Include="src\graphics\dx9.h">
       <Filter>Source Files\hooks</Filter>
     </ClInclude>
+    <ClInclude Include="src\hooks\srcnumber.h">
+      <Filter>Source Files\hooks</Filter>
+    </ClInclude>
+    <ClInclude Include="src\hooks\mirror.h" />
+    <ClInclude Include="src\hooks\cursor.h" />
+    <ClInclude Include="src\hooks\replayfix.h" />
+    <ClInclude Include="src\hooks\updategamestate.h" />
+    <ClInclude Include="src\hooks\judgement.h" />
   </ItemGroup>
 </Project>

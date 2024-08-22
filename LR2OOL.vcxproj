@@ -64,13 +64,13 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug|Win32'">
-    <IncludePath>$(SolutionDir)\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\include;$(IncludePath);$(SolutionDir)\src</IncludePath>
     <LibraryPath>$(SolutionDir)libs\$(Configuration)\;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)\build\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)\build\obj\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release|Win32'">
-    <IncludePath>$(SolutionDir)\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\include;$(IncludePath);$(SolutionDir)\src</IncludePath>
     <LibraryPath>$(SolutionDir)libs\$(Configuration)\;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)\build\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)\build\obj\$(Configuration)\</IntDir>
@@ -152,26 +152,38 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\config.cpp" />
-    <ClCompile Include="src\dllmain.cpp" />
-    <ClCompile Include="src\gui.cpp" />
-    <ClCompile Include="src\dx9.cpp" />
-    <ClCompile Include="src\hiterror.cpp" />
-    <ClCompile Include="src\hooks.cpp" />
-    <ClCompile Include="src\imguistyle.cpp" />
-    <ClCompile Include="src\overlay.cpp" />
-    <ClCompile Include="src\statistics.cpp" />
+    <ClCompile Include="src\config\config.cpp" />
+    <ClCompile Include="src\hooks\judgement.cpp" />
+    <ClCompile Include="src\hooks\updategamestate.cpp" />
+    <ClCompile Include="src\hooks\replayfix.cpp" />
+    <ClCompile Include="src\init.cpp" />
+    <ClCompile Include="src\graphics\gui.cpp" />
+    <ClCompile Include="src\graphics\dx9.cpp" />
+    <ClCompile Include="src\overlay\hiterror.cpp" />
+    <ClCompile Include="src\hooks\hooks.cpp" />
+    <ClCompile Include="src\hooks\cursor.cpp" />
+    <ClCompile Include="src\overlay\imguistyle.cpp" />
+    <ClCompile Include="src\hooks\mirror.cpp" />
+    <ClCompile Include="src\overlay\overlay.cpp" />
+    <ClCompile Include="src\hooks\srcnumber.cpp" />
+    <ClCompile Include="src\utils\statistics.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\config.h" />
-    <ClInclude Include="src\gui.h" />
-    <ClInclude Include="src\dx9.h" />
-    <ClInclude Include="src\hiterror.h" />
-    <ClInclude Include="src\hooks.h" />
-    <ClInclude Include="src\imguistyle.h" />
-    <ClInclude Include="src\overlay.h" />
-    <ClInclude Include="src\statistics.h" />
-    <ClInclude Include="src\version.h" />
+    <ClInclude Include="src\config\config.h" />
+    <ClInclude Include="src\graphics\gui.h" />
+    <ClInclude Include="src\graphics\dx9.h" />
+    <ClInclude Include="src\overlay\hiterror.h" />
+    <ClInclude Include="src\hooks\hooks.h" />
+    <ClInclude Include="src\hooks\cursor.h" />
+    <ClInclude Include="src\hooks\judgement.h" />
+    <ClInclude Include="src\hooks\updategamestate.h" />
+    <ClInclude Include="src\hooks\replayfix.h" />
+    <ClInclude Include="src\overlay\imguistyle.h" />
+    <ClInclude Include="src\hooks\mirror.h" />
+    <ClInclude Include="src\overlay\overlay.h" />
+    <ClInclude Include="src\hooks\srcnumber.h" />
+    <ClInclude Include="src\utils\statistics.h" />
+    <ClInclude Include="src\config\version.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
