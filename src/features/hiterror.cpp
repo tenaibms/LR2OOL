@@ -67,7 +67,7 @@ void hiterror::Render()
                     ImVec2{ center.x + (thickness / 2) + x + buffer[i].delta * (width / 256.0f), size.y + y },
                     color
                 );
-                buffer[i].opacity = overlay::FadeOut(buffer[i].opacity, 255.0, 0.0, 0.5, io.DeltaTime);
+                buffer[i].opacity = overlay::FadeOut(buffer[i].opacity, 255.0, 0.0, 0.25, io.DeltaTime);
             }
         }
 
