@@ -10,7 +10,7 @@
 #include <windowsx.h>
 
 #include "gui.h"
-#include "overlay/hiterror.h"
+#include "features/hiterror.h"
 #include "overlay/imguistyle.h"
 #include "overlay/overlay.h"
 

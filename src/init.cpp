@@ -9,7 +9,7 @@
 #include "hooks/hooks.h"
 #include "hooks/judgement.h"
 #include "config/config.h"
-#include "overlay/hiterror.h"
+#include "features/hiterror.h"
 
 void Setup(HMODULE hModule)
 {

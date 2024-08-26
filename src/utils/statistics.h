@@ -27,5 +27,16 @@ namespace statistics {
         double GetPopulationStandardDeviation();
         double GetSampleStandardDeviation();
     };
+
+    struct Ema {
+        Ema();
+        ~Ema() = default;
+
+        void Reset();
+        void Insert(float value);
+
+        float ema;
+        float alpha = 0.07f;
+    };
 }
 

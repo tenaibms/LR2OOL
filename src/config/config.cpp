@@ -4,18 +4,21 @@
 #include "hooks/replayfix.h"
 #include "hooks/mirror.h"
 
-#include "overlay/hiterror.h"
+#include "features/hiterror.h"
 
 /* macro_hell */
 #define IF_HAS_THEN_READ(section, label, variable_to_set, formatter) if(ini[section].has(label)) variable_to_set = formatter
 #define IF_HAS_THEN_READ_BOOL(section, label, variable_to_set) IF_HAS_THEN_READ(section, label, variable_to_set, ini[section][label] == "true" ? true : false)
 #define IF_HAS_THEN_READ_INT(section, label, variable_to_set) IF_HAS_THEN_READ(section, label, variable_to_set, stoi(ini[section][label]))
 #define IF_HAS_THEN_READ_INT_16(section, label, variable_to_set) IF_HAS_THEN_READ(section, label, variable_to_set, stoi(ini[section][label], nullptr, 16))
-#define TS_INT(x) std::to_string(x)
-#define TS_16(x) std::format("{:06X}", x)
+
 #define TS_BOOL(x) x ? "true" : "false"
+#define TS_INT(x) std::to_string(x)
+#define TS_INT_16(x) std::format("{:06X}", x)
 
-
+#define SET_BOOL(section, label, variable) ini[section][label] = TS_BOOL(variable)
+#define SET_INT(section, label, variable) ini[section][label] = TS_INT(variable)
+#define SET_INT_16(section, label, variable) ini[section][label] = TS_INT_16(variable)
 
 void config::LoadConfig()
 {
@@ -30,6 +33,7 @@ void config::LoadConfig()
             IF_HAS_THEN_READ_INT("hit_error", "height", hiterror::height);
             IF_HAS_THEN_READ_INT("hit_error", "thickness", hiterror::thickness);
             IF_HAS_THEN_READ_BOOL("hit_error", "ema", hiterror::using_ema);
+            IF_HAS_THEN_READ_BOOL("hit_error", "smooth", hiterror::smooth_ema);
             IF_HAS_THEN_READ_INT("hit_error", "lines", hiterror::lines);
         }
         
@@ -47,23 +51,34 @@ void config::LoadConfig()
 }
 
 void config::SaveConfig() {
-    ini["hooks"]["mirror"] = TS_BOOL(hooks::mirror::enabled);
-    ini["hooks"]["replay"] = TS_BOOL(hooks::replayfix::enabled);
+    SET_BOOL("hooks", "mirror", hooks::mirror::enabled);
+    SET_BOOL("hooks", "mirror", hooks::replayfix::enabled);
 
+    SET_INT("hit_error", "width", hiterror::width);
+    SET_INT("hit_error", "height", hiterror::height);
+    SET_INT("hit_error", "thickness", hiterror::thickness);
+    SET_INT("hit_error", "lines", hiterror::lines);
+    SET_BOOL("hit_error", "ema", hiterror::using_ema);
+    SET_BOOL("hit_error", "smoothed", hiterror::smooth_ema);
 
-    ini["hit_error"]["width"]	  = TS_INT(hiterror::width);
-    ini["hit_error"]["height"]	  = TS_INT(hiterror::height);
-    ini["hit_error"]["thickness"] = TS_INT(hiterror::thickness);
-    ini["hit_error"]["ema"]		  = TS_BOOL(hiterror::using_ema);
-    ini["hit_error"]["lines"]	  = TS_INT(hiterror::lines);
-
-    ini["colors"]["ema"]          = TS_16(hiterror::colors::ema);
-    ini["colors"]["pgreat"]       = TS_16(hiterror::colors::pgreat);
-    ini["colors"]["great"]        = TS_16(hiterror::colors::great);
-    ini["colors"]["good"]         = TS_16(hiterror::colors::good);
-    ini["colors"]["cb"]           = TS_16(hiterror::colors::cb);
+    SET_INT_16("colors", "ema", hiterror::colors::ema);
+    SET_INT_16("colors", "pgreat", hiterror::colors::ema);
+    SET_INT_16("colors", "great", hiterror::colors::ema);
+    SET_INT_16("colors", "good", hiterror::colors::ema);
+    SET_INT_16("colors", "cb", hiterror::colors::ema);
 
     file.write(ini, true);
 }
 
-#undef TS
+#undef IF_HAS_THEN_READ
+#undef IF_HAS_THEN_READ_BOOL
+#undef IF_HAS_THEN_READ_INT
+#undef IF_HAS_THEN_READ_INT_16
+
+#undef TS_BOOL
+#undef TS_INT
+#undef TS_INT_16
+
+#undef SET_BOOL
+#undef SET_INT
+#undef SET_INT_16

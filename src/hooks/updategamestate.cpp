@@ -1,5 +1,5 @@
 #include "updategamestate.h"
-#include "overlay/hiterror.h"
+#include "features/hiterror.h"
 #include "hooks/srcnumber.h"
 
 void hooks::updategamestate::Install()

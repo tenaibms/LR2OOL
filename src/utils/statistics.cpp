@@ -46,3 +46,18 @@ double statistics::OnlineStandardDeviation::GetSampleStandardDeviation()
 		return 0;
 	return sqrt(m2 / (dataset_size - 1));
 }
+
+statistics::Ema::Ema()
+{
+	ema = 0;
+}
+
+void statistics::Ema::Reset()
+{
+	ema = 0;
+}
+
+void statistics::Ema::Insert(float value)
+{
+	ema = ema + (alpha * (value - ema));
+}

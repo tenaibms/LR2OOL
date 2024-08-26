@@ -1,6 +1,6 @@
 #include "hiterror.h"
 #include "hooks/judgement.h"
-#include "overlay.h"
+#include "overlay/overlay.h"
 #include <imgui.h>
 
 void hiterror::Render()
@@ -11,6 +11,9 @@ void hiterror::Render()
 
         ImGui::Begin("Hit Error", 0, bg_enabled || hovered ? ImGuiWindowFlags_NoDecoration : ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
         hovered = ImGui::IsWindowHovered();
+
+        ImGuiIO& io = ImGui::GetIO();
+
         const ImVec2 p = ImGui::GetWindowPos();
 
         const float x = p.x;
@@ -23,14 +26,24 @@ void hiterror::Render()
 
         if (using_ema) {
             // Current Ema
-            draw_list->AddRectFilled(
-                ImVec2{ center.x - (thickness / 2) + x + hiterror::ema * (width / 256.0f), y },
-                ImVec2{ center.x + (thickness / 2) + x + hiterror::ema * (width / 256.0f), size.y + y },
-                overlay::ReplaceAlpha(colors::ema, 255)
-            );
+            if (smooth_ema) {
+                smoothed_ema.alpha = io.DeltaTime * std::clamp(abs(smoothed_ema.ema - ema.ema),4.f, 200.f);
+                smoothed_ema.Insert(ema.ema);
+                draw_list->AddRectFilled(
+                    ImVec2{ center.x - (thickness / 2) + x + hiterror::smoothed_ema.ema * (width / 256.0f), y },
+                    ImVec2{ center.x + (thickness / 2) + x + hiterror::smoothed_ema.ema * (width / 256.0f), size.y + y },
+                    overlay::ReplaceAlpha(colors::ema, 255)
+                );
+            }
+            else {
+                draw_list->AddRectFilled(
+                    ImVec2{ center.x - (thickness / 2) + x + hiterror::ema.ema * (width / 256.0f), y },
+                    ImVec2{ center.x + (thickness / 2) + x + hiterror::ema.ema * (width / 256.0f), size.y + y },
+                    overlay::ReplaceAlpha(colors::ema, 255)
+                );
+            }
         }
         else {
-            ImGuiIO& io = ImGui::GetIO();
             for (size_t i = 0; i < lines; ++i) {
                 ImU32 color = IM_COL32(255, 255, 255, 255);
 
@@ -68,16 +81,11 @@ void hiterror::Render()
     }
 }
 
-void hiterror::UpdateEma(int value)
-{
-    ema = ema + (alpha * (value - ema));
-}
-
 void hiterror::Reset()
 {
     open = true;
     buffer_current = 0;
-    ema = 0;
+    ema.Reset();
 }
 
 void hiterror::InsertBuffer(int delta, JUDGEMENT judgement)

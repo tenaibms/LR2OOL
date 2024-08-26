@@ -9,7 +9,8 @@
 #include "hooks/mirror.h"
 #include "hooks/replayfix.h"
 
-#include "hiterror.h"
+#include "features/hiterror.h"
+
 #include "imguistyle.h"
 #include "overlay.h"
 
@@ -37,6 +38,8 @@ void overlay::DrawMainWindow()
         ImGui::Checkbox("Show In Menu", &hiterror::open_config);
         ImGui::SameLine(); HelpMarker("This lets you view hit error bar whenever the menu is opened.");
         ImGui::Checkbox("Use EMA", &hiterror::using_ema);
+        ImGui::SameLine();
+        ImGui::Checkbox("Smooth EMA", &hiterror::smooth_ema);
         ImGui::SliderInt("Width", &hiterror::width, 50, 500);
         hiterror::bg_enabled = ImGui::IsItemHovered();
         ImGui::SliderInt("Height", &hiterror::height, 2, 50);
@@ -45,6 +48,11 @@ void overlay::DrawMainWindow()
         ImGui::BeginDisabled(hiterror::using_ema);
         ImGui::SliderInt("Number of Lines", &hiterror::lines, 1, BUFFER_MAX_SIZE);
         ImGui::EndDisabled();
+        ImGui::BeginDisabled(!hiterror::using_ema);
+        ImGui::SliderFloat("EMA Alpha", &hiterror::ema.alpha, 0.0f, 1.0f);
+        ImGui::EndDisabled();
+        ImGui::SameLine(); HelpMarker("Higher alpha values cause the value of ema to shift more dramatically.");
+
 
         ImGuiColorEditFlags flags = ImGuiColorEditFlags_PickerHueWheel | ImGuiColorEditFlags_DisplayRGB | ImGuiColorEditFlags_NoOptions;
         ImGui::SeparatorText("Colors");

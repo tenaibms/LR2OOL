@@ -1,5 +1,5 @@
 #include "judgement.h"
-#include "overlay/hiterror.h"
+#include "features/hiterror.h"
 #include "hooks/srcnumber.h"
 
 int __cdecl hooks::judgement::OnJudgement(int a1, int a2, int a3, int a4, int a5, char a6)
@@ -19,7 +19,7 @@ int __cdecl hooks::judgement::OnJudgement(int a1, int a2, int a3, int a4, int a5
 
     /* empty poors should not affect timing metrics */
     if (judgement != JUDGEMENT::empty_poor) {
-        hiterror::UpdateEma(judgement_delta);
+        hiterror::ema.Insert(judgement_delta);
         srcnumber::mean.Insert(judgement_delta);
         srcnumber::stddev.Insert(judgement_delta);
     }
