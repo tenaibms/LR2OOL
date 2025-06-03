@@ -3,6 +3,7 @@
 
 #include "hooks/replayfix.h"
 #include "hooks/mirror.h"
+#include "hooks/drawnum.h"
 
 #include "features/hiterror.h"
 
@@ -45,6 +46,11 @@ void config::LoadConfig()
             READ_INT_16("colors", "good", hiterror::colors::good);
             READ_INT_16("colors", "cb", hiterror::colors::cb);
         }
+
+        if (ini.has("skin_tweaks")) {
+            READ_BOOL("reactive fast/slow position", "fs", drawnum::fs_toggle);
+            READ_BOOL("reactive pacemaker position", "pacemaker", drawnum::pacemaker_toggle);
+        }
     }
     else {
         config::SaveConfig();
@@ -68,6 +74,9 @@ void config::SaveConfig() {
     SET_INT_16("colors", "great", hiterror::colors::great);
     SET_INT_16("colors", "good", hiterror::colors::good);
     SET_INT_16("colors", "cb", hiterror::colors::cb);
+
+    SET_BOOL("reactive fast/slow position", "fs", drawnum::fs_toggle);
+    SET_BOOL("reactive pacemaker position", "pacemaker", drawnum::pacemaker_toggle);
 
     file.write(ini, true);
 }

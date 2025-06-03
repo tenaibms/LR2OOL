@@ -12,5 +12,8 @@ namespace drawnum {
 	inline SafetyHookInline draw_hook;
 	int hook_draw(void* drb, int src[17], int dst[11], void* T, int number, int x, int y);
 
+	inline bool fs_toggle;
+	inline bool pacemaker_toggle;
+
 	void Install();
 }
