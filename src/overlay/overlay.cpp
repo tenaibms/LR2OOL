@@ -73,6 +73,12 @@ void overlay::DrawMainWindow()
         ColorEdit3U32("Combo Break", &hiterror::colors::cb, flags);
         ImGui::EndDisabled();
 
+        ImGui::SeparatorText("Skin Tweaks");
+        ImGui::Checkbox("Relative F/S", &drawnum::fs_toggle);
+        ImGui::SameLine(); HelpMarker("Moves the fast/slow display when judge text is moved.");
+        ImGui::Checkbox("Relative Pacemaker", &drawnum::pacemaker_toggle);
+        ImGui::SameLine(); HelpMarker("Moves the pacemaker when judge text is moved.");
+
         ImGui::Separator();
         if (ImGui::Button("Keybinds"))
             if (!keybinds_open)
@@ -83,11 +89,7 @@ void overlay::DrawMainWindow()
         ImGui::SameLine();
         if (ImGui::Button("Save Config"))
             config::SaveConfig();
-        ImGui::SeparatorText("Skin Tweaks");
-        ImGui::Checkbox("Relative F/S", &drawnum::fs_toggle);
-        ImGui::SameLine(); HelpMarker("Moves the fast/slow display when judge text is moved.");
-        ImGui::Checkbox("Relative Pacemaker", &drawnum::fs_toggle);
-        ImGui::SameLine(); HelpMarker("Moves the pacemaker when judge text is moved.");
+        
     }
     ImGui::End();
 }
@@ -96,7 +98,7 @@ void overlay::DrawKeybindsWindow()
 {
     if (ImGui::Begin("Keybinds", &keybinds_open, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings)) {
         ImGui::Text("Insert - Open Configuration Menu");
-        ImGui::Text("End - Uninject LR2HAX");
+        ImGui::Text("End - Uninject LR2OOL");
     }
     ImGui::End();
 }

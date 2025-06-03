@@ -48,8 +48,8 @@ void config::LoadConfig()
         }
 
         if (ini.has("skin_tweaks")) {
-            READ_BOOL("reactive fast/slow position", "fs", drawnum::fs_toggle);
-            READ_BOOL("reactive pacemaker position", "pacemaker", drawnum::pacemaker_toggle);
+            READ_BOOL("skin_tweaks", "fs", drawnum::fs_toggle);
+            READ_BOOL("skin_tweaks", "pacemaker", drawnum::pacemaker_toggle);
         }
     }
     else {
@@ -75,8 +75,8 @@ void config::SaveConfig() {
     SET_INT_16("colors", "good", hiterror::colors::good);
     SET_INT_16("colors", "cb", hiterror::colors::cb);
 
-    SET_BOOL("reactive fast/slow position", "fs", drawnum::fs_toggle);
-    SET_BOOL("reactive pacemaker position", "pacemaker", drawnum::pacemaker_toggle);
+    SET_BOOL("skin_tweaks", "fs", drawnum::fs_toggle);
+    SET_BOOL("skin_tweaks", "pacemaker", drawnum::pacemaker_toggle);
 
     file.write(ini, true);
 }
