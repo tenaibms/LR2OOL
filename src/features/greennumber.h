@@ -1,7 +1,7 @@
 #pragma once
 #include <stdint.h>
 
-#define ciu const inline uintptr_t
+/*#define ciu const inline uintptr_t
 
 namespace greennumber {
 	namespace Offsets {
@@ -37,4 +37,11 @@ namespace greennumber {
 	void UpdateVariables();
 }
 
-#undef ciu
+#undef ciu*/
+
+class GreenNumber {
+public:
+	double GetGreenNumber(int hsfix, int player);
+	double GetWhiteNumber(int player);
+	double GetLiftNumber(int player);
+};

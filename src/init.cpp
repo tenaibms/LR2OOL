@@ -1,9 +1,7 @@
-#define WIN32_LEAN_AND_MEAN
-#define _CRT_SECURE_NO_WARNINGS
 #include <Windows.h>
-#include <VersionHelpers.h>
-#include <safetyhook.hpp>
 #include <chrono>
+
+#include <LR2Bindings.hpp>
 
 #include "graphics/gui.h"
 #include "graphics/dx9.h"
@@ -15,21 +13,12 @@
 void Setup(HMODULE hModule)
 {
     try {
+        LR2::Init();
         gui::Setup();
         dx9::Setup();
     }
     catch (const std::exception& error) {
         MessageBox(0, error.what(), "Error Occured", MB_OK | MB_ICONEXCLAMATION);
-        goto cleanup;
-    }
-    
-    /*
-     * checks for f / s patch
-     * eventually should move away from requiring it...
-     * however it makes life much easier
-     */
-    if (*(int*)(0x44FAE3) == 0xCCCCCCCC) {
-        MessageBoxA(0, "F/S patch is required", "Incompatible Version", MB_OK | MB_ICONERROR);
         goto cleanup;
     }
 
@@ -50,10 +39,7 @@ cleanup:
     FreeLibraryAndExitThread(hModule, 0);
 }
 
-BOOL APIENTRY DllMain( HMODULE hModule,
-                       DWORD  ul_reason_for_call,
-                       LPVOID lpReserved
-                     )
+BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved)
 {
     switch (ul_reason_for_call)
     {

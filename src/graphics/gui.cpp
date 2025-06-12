@@ -235,13 +235,12 @@ void gui::Render()
 
 LRESULT CALLBACK WindowProcess(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 {
-    if (GetAsyncKeyState(VK_INSERT) & 1)
+    if (GetAsyncKeyState(gui::menu_keybind) & 1)
         overlay::open = !overlay::open;
 
     LPARAM imgui_lParam = lParam;
 
     // this fixes mouse coordinates not scaling with the window when using a non-native resolution for lr2/lr2hd
-
     if (msg == WM_MOUSEMOVE || msg == WM_NCMOUSEMOVE) {
         RECT r;
         GetClientRect(hWnd, &r); // maybe should only update this on resize..? seems wasteful to do this every time a message is called
@@ -256,7 +255,10 @@ LRESULT CALLBACK WindowProcess(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
         imgui_lParam = MAKELPARAM(mouse_pos.x, mouse_pos.y);
     }
 
-    if (overlay::open && ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, imgui_lParam))
+    ImGuiIO& io = ImGui::GetIO();
+
+    ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, imgui_lParam);
+    if (io.WantCaptureMouse)
         return 1L;
 
     return CallWindowProc(gui::original_window_process, hWnd, msg, wParam, lParam);

@@ -1,6 +1,7 @@
 #include <format>
 #include "config.h"
 
+#include "graphics/gui.h"
 #include "hooks/replayfix.h"
 #include "hooks/mirror.h"
 #include "hooks/drawnum.h"
@@ -24,33 +25,28 @@
 void config::LoadConfig()
 {
     if (file.read(ini)) {
-        if(ini.has("hooks")) {
-            READ_BOOL("hooks", "mirror", hooks::mirror::enabled);
-            READ_BOOL("hooks", "replay", hooks::replayfix::enabled);
-        }
+        READ_BOOL("hooks", "mirror", hooks::mirror::enabled);
+        READ_BOOL("hooks", "mirror", hooks::replay_fix.m_enabled);
 
-        if(ini.has("hit_error")) {
-            READ_INT("hit_error", "width", hiterror::width);
-            READ_INT("hit_error", "height", hiterror::height);
-            READ_INT("hit_error", "thickness", hiterror::thickness);
-            READ_INT("hit_error", "lines", hiterror::lines);
-            READ_BOOL("hit_error", "ema", hiterror::using_ema);
-            READ_BOOL("hit_error", "enabled", hiterror::enabled);
-            READ_BOOL("hit_error", "smoothed", hiterror::smooth_ema);
-        }
+        READ_INT("hit_error", "width", hiterror::width);
+        READ_INT("hit_error", "height", hiterror::height);
+        READ_INT("hit_error", "thickness", hiterror::thickness);
+        READ_INT("hit_error", "lines", hiterror::lines);
+        READ_BOOL("hit_error", "ema", hiterror::using_ema);
+        READ_BOOL("hit_error", "enabled", hiterror::enabled);
+        READ_BOOL("hit_error", "smoothed", hiterror::smooth_ema);    
         
-        if(ini.has("colors")) {
-            READ_INT_16("colors", "ema", hiterror::colors::ema);
-            READ_INT_16("colors", "pgreat", hiterror::colors::pgreat);
-            READ_INT_16("colors", "great", hiterror::colors::great);
-            READ_INT_16("colors", "good", hiterror::colors::good);
-            READ_INT_16("colors", "cb", hiterror::colors::cb);
-        }
+        READ_INT_16("colors", "ema", hiterror::colors::ema);
+        READ_INT_16("colors", "pgreat", hiterror::colors::pgreat);
+        READ_INT_16("colors", "great", hiterror::colors::great);
+        READ_INT_16("colors", "good", hiterror::colors::good);
+        READ_INT_16("colors", "cb", hiterror::colors::cb);
 
-        if (ini.has("skin_tweaks")) {
-            READ_BOOL("skin_tweaks", "fs", drawnum::fs_toggle);
-            READ_BOOL("skin_tweaks", "pacemaker", drawnum::pacemaker_toggle);
-        }
+        READ_BOOL("skin_tweaks", "fs", drawnum::fs_toggle);
+        READ_BOOL("skin_tweaks", "pacemaker", drawnum::pacemaker_toggle);
+
+        READ_INT("keybinds", "menu", gui::menu_keybind);
+        
     }
     else {
         config::SaveConfig();
@@ -59,7 +55,7 @@ void config::LoadConfig()
 
 void config::SaveConfig() {
     SET_BOOL("hooks", "mirror", hooks::mirror::enabled);
-    SET_BOOL("hooks", "mirror", hooks::replayfix::enabled);
+    SET_BOOL("hooks", "mirror", hooks::replay_fix.m_enabled);
 
     SET_INT("hit_error", "width", hiterror::width);
     SET_INT("hit_error", "height", hiterror::height);
@@ -77,6 +73,8 @@ void config::SaveConfig() {
 
     SET_BOOL("skin_tweaks", "fs", drawnum::fs_toggle);
     SET_BOOL("skin_tweaks", "pacemaker", drawnum::pacemaker_toggle);
+
+    SET_INT("keybinds", "menu", gui::menu_keybind);
 
     file.write(ini, true);
 }

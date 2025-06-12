@@ -35,148 +35,47 @@ int hooks::srcnumber::SrcNumber(uintptr_t* data_ptr, int id)
     double bad_percent    = (double) bad_count / sum * 100.0;
     double poor_percent   = (double) poor_count / sum * 100.0;
 
-
     switch (id) {
-    case 295: // 1p current random
-    {
-        return loadbms::random_1p;
-        break;
+        case 295: return loadbms::random_1p; /* 1p current random */
+        case 296: return GetWhole(mean.GetMean()); /* whole part of mean */
+        case 297: return GetDecimal(mean.GetMean(), 2); /* decimal part of mean */
+        case 298: return GetWhole(stddev.GetPopulationStandardDeviation()); /* whole part of stddev */
+        case 299: return GetDecimal(stddev.GetPopulationStandardDeviation(), 2); /* decimal part of stddev */
+        case 302: return GetWhole(green_number.GetGreenNumber(2, 1)); /* green number */
+        case 303: return GetWhole(green_number.GetWhiteNumber(1)); /* white number */
+        case 304: return GetWhole(green_number.GetGreenNumber(1, 1)); /* min green number */
+        case 305: return GetWhole(green_number.GetGreenNumber(0, 1)); /* max green number */
+        case 400: return GetWhole(pgreat_ratio); /* whole part of pgreat ratio */
+        case 401: return GetDecimal(pgreat_ratio, 2); /* decimal part of pgreat ratio */
+        case 402: return GetWhole(great_ratio); /* whole part of great ratio */
+        case 403: return GetDecimal(great_ratio, 2); /* decimal part of great ratio */
+        case 404: return GetWhole(pgreat_percent); /* whole percentage of pgreats */
+        case 405: return GetDecimal(pgreat_percent, 2); /* decimal percentage of pgreats */
+        case 406: return GetWhole(great_percent); /* whole percentage of greats */
+        case 407: return GetDecimal(great_percent, 2); /* decimal percentage of greats */
+        case 408: return GetWhole(good_percent); /* whole percentage of goods */
+        case 409: return GetDecimal(good_percent, 2); /* decimal percentage of goods */
+        case 410: return GetWhole(bad_percent); /* whole percentage of bads */
+        case 411: return GetDecimal(bad_percent, 2); /* decimal percentage of bads */
+        case 412: return GetWhole(poor_percent); /* whole percentage of poors */
+        case 413: return GetDecimal(poor_percent, 2); /* decimal percentage of poors */
+        case 414: return GetDecimal(green_number.GetGreenNumber(2, 1), 2); /* decimal part of green number */
+        case 415: return GetDecimal(green_number.GetWhiteNumber(1), 2); /* decimal part of white number */
+        case 416: return GetWhole(green_number.GetLiftNumber(1)); /* whole part of lift number */
+        case 417: return GetDecimal(green_number.GetLiftNumber(1), 2); /* decimal part of lift number */
+        case 418: return loadbms::random_2p; /* 2p random */
+        case 419: return GetWhole(*(double*)(offsets::game_offset + offsets::hp_offset)); /* Custom gauge whole */
+        case 420: return GetDecimal(*(double*)(offsets::game_offset + offsets::hp_offset), 1); /* custom gauge decimal 1 place */
+        case 421: return GetDecimal(*(double*)(offsets::game_offset + offsets::hp_offset), 2); /* custom gauge decimal 2 places */
+        case 422: return src_number_hook.call<int>(data_ptr, 33) + src_number_hook.call<int>(data_ptr, 34) + src_number_hook.call<int>(data_ptr, 35) + src_number_hook.call<int>(data_ptr, 36); /* Total Judgements */
+        case 423: return timer.GetSeconds(); /* seconds */
+        case 424: return timer.GetMinutes(); /* minutes */
+        case 425: return timer.GetHours(); /* hours */
+        case 426: return totaltime::GetSeconds(); /* total seconds, made it while eating garlic biscuits - lyko */
+        case 427: return totaltime::GetMinutes(); /* total minutes */
+        case 428: return totaltime::GetHours(); /* total hours */
+        default:  return src_number_hook.call<int>(data_ptr, id);
     }
-    case 296: // whole part of mean
-        return GetWhole(mean.GetMean());
-        break;
-    case 297: // decimal part of mean
-        return GetDecimal(mean.GetMean(), 2);
-        break;
-    case 298: // whole part of stddev
-        return GetWhole(stddev.GetPopulationStandardDeviation());
-        break;
-    case 299: // decimal part of stddev
-        return GetDecimal(stddev.GetPopulationStandardDeviation(), 2);
-        break;
-    case 302: // green number
-        return GetWhole(greennumber::GetGreenNumber());
-        break;
-    case 303: // white number
-        return GetWhole(greennumber::GetWhiteNumber());
-        break;
-    case 304: // min green number
-        return GetWhole(greennumber::GetMinGreenNumber());
-        break;
-    case 305: // max green number
-        return GetWhole(greennumber::GetMaxGreenNumber());
-        break;
-    case 400: // whole part of pgreat ratio
-        return GetWhole(pgreat_ratio);
-        break;
-    case 401: // decimal part of pgreat ratio
-        return GetDecimal(pgreat_ratio, 2);
-        break;
-    case 402: // whole part of great ratio
-        return GetWhole(great_ratio);
-        break;
-    case 403: // decimal part of great ratio
-        return GetDecimal(great_ratio, 2);
-        break;
-    case 404: // whole percentage of pgreats
-        return GetWhole(pgreat_percent);
-        break;
-    case 405: // decimal percentage of pgreats
-        return GetDecimal(pgreat_percent, 2);
-        break;
-    case 406: // whole percentage of greats
-        return GetWhole(great_percent);
-        break;
-    case 407: // decimal percentage of greats
-        return GetDecimal(great_percent, 2);
-        break;
-    case 408: // whole percentage of goods
-        return GetWhole(good_percent);
-        break;
-    case 409: // decimal percentage of goods
-        return GetDecimal(good_percent, 2);
-        break;
-    case 410: // whole percentage of bads
-        return GetWhole(bad_percent);
-        break;
-    case 411: // decimal percentage of bads
-        return GetDecimal(bad_percent, 2);
-        break;
-    case 412: // whole percentage of poors
-        return GetWhole(poor_percent);
-        break;
-    case 413: // decimal percentage of poors
-        return GetDecimal(poor_percent, 2);
-        break;
-    case 414: // decimal part of green number
-        return GetDecimal(greennumber::GetGreenNumber(), 2);
-        break;
-    case 415: // decimal part of white number
-        return GetDecimal(greennumber::GetWhiteNumber(), 2);
-        break;
-    case 416: // whole part of lift number
-        return GetWhole(greennumber::GetLiftNumberP1());
-        break;
-    case 417: // decimal part of lift number
-        return GetDecimal(greennumber::GetLiftNumberP1(), 2);
-        break;
-    case 418: // 2p random
-    {
-        return loadbms::random_2p;
-        break;
-    }
-    case 419: /* Custom gauge whole */
-    {
-        return GetWhole(*(double*)(offsets::game_offset + offsets::hp_offset));
-        break;
-    }
-    case 420: /* custom gauge decimal 1 place */
-    {
-        return GetDecimal(*(double*)(offsets::game_offset + offsets::hp_offset), 1);
-        break;
-    }
-    case 421: /* custom gauge decimal 2 places */
-    {
-        return GetDecimal(*(double*)(offsets::game_offset + offsets::hp_offset), 2);
-    }
-    case 422: /* Total Judgements */
-    {
-        /* PGREAT + GREAT + GOOD + BAD (not including poors due to them being ambigious) */
-        return src_number_hook.call<int>(data_ptr, 33) + src_number_hook.call<int>(data_ptr, 34) + src_number_hook.call<int>(data_ptr, 35) + src_number_hook.call<int>(data_ptr, 36);
-        break;
-    }
-    case 423: /* I should move these into Timer... */
-    {
-        return timer.GetTime() % 60;
-        break;
-    }
-    case 424:
-    {
-        return timer.GetTime() / 60 % 60;
-        break;
-    }
-    case 425:
-    {
-        return timer.GetTime() / 3600;
-    }
-    case 426: /* made it while eating garlic biscuits */
-    {
-        return totaltime::GetSeconds();
-    }
-    case 427: 
-    {
-        return totaltime::GetMinutes();
-    }
-    case 428:
-    {
-        return totaltime::GetHours();
-    }
-    default:
-        return src_number_hook.call<int>(data_ptr, id);
-        break;
-    }
-
-    return 0;
 }
 
 inline int hooks::srcnumber::GetWhole(double num)

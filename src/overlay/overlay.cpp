@@ -33,7 +33,7 @@ void overlay::DrawMainWindow()
     if (ImGui::Begin(std::format("LR2OOL v{}.{}.{}", version.major, version.minor, version.patch).c_str(), &open, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoBringToFrontOnFocus)) {
         ImGui::SeparatorText("Hooks");
         ImGui::Checkbox("Allow Course Mirroring", &hooks::mirror::enabled);
-        ImGui::Checkbox("Fix GAS Replays", &hooks::replayfix::enabled);
+        ImGui::Checkbox("Fix GAS Replays", &hooks::replay_fix.m_enabled);
         ImGui::SameLine(); HelpMarker("Patches GAS replays to use the gauge you ended with, will do nothing if gauge doesn't change.");
 
         ImGui::SeparatorText("Hit Error");
@@ -97,7 +97,7 @@ void overlay::DrawMainWindow()
 void overlay::DrawKeybindsWindow()
 {
     if (ImGui::Begin("Keybinds", &keybinds_open, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings)) {
-        ImGui::Text("Insert - Open Configuration Menu");
+        open_widget.Render();
         ImGui::Text("End - Uninject LR2OOL");
     }
     ImGui::End();
@@ -224,4 +224,30 @@ void overlay::Render()
     }
 
     ImGui::GetStyle().Alpha = 1.0;
+}
+
+void HotkeyWidget::Render()
+{
+    ImGui::PushID(m_label);
+    if (ImGui::Button(m_key_name_buffer, ImVec2{ ImGui::GetFontSize() * 4, 0 })) {
+        m_awaiting_keypress = true;
+        strcpy_s(m_key_name_buffer, 256, "...");
+    }
+    if(m_awaiting_keypress) ReadKey();
+    ImGui::SameLine();
+    ImGui::Text(m_label);
+
+    ImGui::PopID();
+}
+
+void HotkeyWidget::ReadKey()
+{
+    for (size_t i = 0; i < 256; ++i) {
+        if (GetAsyncKeyState(i) & 0x8000) {
+            m_keycode = i;
+            GetKeyNameText(MapVirtualKey(m_keycode, MAPVK_VK_TO_VSC) << 16, m_key_name_buffer, 256);
+            m_awaiting_keypress = false;
+        }
+    }
+    Sleep(2);
 }

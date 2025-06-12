@@ -1,5 +1,5 @@
 #include "slider.h"
-#include "features/greennumber.h"
+#include "hooks/srcnumber.h"
 #include <Windows.h>
 
 int lift_number_p1 = 0;
@@ -15,7 +15,7 @@ __declspec(naked) int LiftSliderP1(void) {
 		push esi
 	}	
 
-	lift_number_p1 = greennumber::GetLiftNumberP1();
+	lift_number_p1 = hooks::srcnumber::green_number.GetLiftNumber(1);
 
 	__asm {
 		pop esi
@@ -55,7 +55,7 @@ __declspec(naked) int LiftSliderP2(void) {
 		push esi
 	}
 
-	lift_number_p2 = greennumber::GetLiftNumberP2();
+	lift_number_p2 = hooks::srcnumber::green_number.GetLiftNumber(2);
 
 	__asm {
 		pop esi

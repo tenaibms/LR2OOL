@@ -1,17 +1,22 @@
 #include "replayfix.h"
+#include "hooks/hooks.h"
+#include "config/config.h"
 
-int __cdecl hooks::replayfix::SaveReplay(uint32_t* replay, int a2, void* ArgList)
+#include <LR2Bindings.hpp>
+
+ReplayFix::ReplayFix()
 {
-    if (enabled) {
-        uint8_t* replay_gauge = reinterpret_cast<uint8_t*>(*replay + offsets::save_replay);
-        if (*replay_gauge != *current_gauge) {
-            *replay_gauge = *current_gauge;
-        }
-    }
-    return save_replay_hook.ccall<int>(replay, a2, ArgList);
+    save_replay_hook = safetyhook::create_inline(reinterpret_cast<void*>(m_offsets.save_replay), reinterpret_cast<void*>(OnSaveReplay));
 }
 
-void hooks::replayfix::Install()
+int __cdecl ReplayFix::OnSaveReplay(uint32_t* replay, void* song_md5, void* ArgList)
 {
-    save_replay_hook = safetyhook::create_inline(reinterpret_cast<void*>(offsets::save_replay), reinterpret_cast<void*>(SaveReplay));
+    ReplayFix& replay_fix = hooks::replay_fix;
+    uint8_t* current_gauge = reinterpret_cast<uint8_t*>(LR2::pGame->config.play.gaugeOption);
+    uint8_t* replay_gauge = reinterpret_cast<uint8_t*>(replay + replay_fix.m_offsets.replay_guage);
+
+    if (replay_fix.m_enabled) {
+        *replay_gauge = *current_gauge;
+    }
+    return replay_fix.save_replay_hook.ccall<int>(replay, song_md5, ArgList);
 }

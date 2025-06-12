@@ -14,7 +14,6 @@
 void hooks::Setup()
 {
     cursor::Install();
-    judgement::Install();
     mirror::Install();
     srcnumber::Install();
     updategamestate::Install();

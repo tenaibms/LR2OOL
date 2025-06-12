@@ -152,10 +152,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ext\lr2mem\lr2mem.cpp" />
     <ClCompile Include="src\config\config.cpp" />
     <ClCompile Include="src\features\greennumber.cpp" />
     <ClCompile Include="src\features\timeplayed.cpp" />
-	<ClCompile Include="src\features\totaltime.cpp" />
+    <ClCompile Include="src\features\totaltime.cpp" />
     <ClCompile Include="src\hooks\drawnum.cpp" />
     <ClCompile Include="src\hooks\dstflag.cpp" />
     <ClCompile Include="src\hooks\input.cpp" />
@@ -178,10 +179,29 @@
     <ClCompile Include="src\utils\statistics.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\FMODex\fmod.h" />
+    <ClInclude Include="include\FMODex\fmod.hpp" />
+    <ClInclude Include="include\FMODex\fmod_codec.h" />
+    <ClInclude Include="include\FMODex\fmod_dsp.h" />
+    <ClInclude Include="include\FMODex\fmod_errors.h" />
+    <ClInclude Include="include\FMODex\fmod_output.h" />
+    <ClInclude Include="include\imconfig.h" />
+    <ClInclude Include="include\imgui.h" />
+    <ClInclude Include="include\imgui_impl_dx9.h" />
+    <ClInclude Include="include\imgui_impl_win32.h" />
+    <ClInclude Include="include\imgui_internal.h" />
+    <ClInclude Include="include\imstb_rectpack.h" />
+    <ClInclude Include="include\imstb_textedit.h" />
+    <ClInclude Include="include\imstb_truetype.h" />
+    <ClInclude Include="include\ini.h" />
+    <ClInclude Include="include\LR2Bindings.hpp" />
+    <ClInclude Include="include\LR2Typedefs.hpp" />
+    <ClInclude Include="include\safetyhook.hpp" />
+    <ClInclude Include="include\Zydis.h" />
     <ClInclude Include="src\config\config.h" />
     <ClInclude Include="src\features\greennumber.h" />
     <ClInclude Include="src\features\timeplayed.h" />
-	<ClCompile Include="src\features\totaltime.h" />
+    <ClCompile Include="src\features\totaltime.h" />
     <ClInclude Include="src\graphics\gui.h" />
     <ClInclude Include="src\graphics\dx9.h" />
     <ClInclude Include="src\features\hiterror.h" />

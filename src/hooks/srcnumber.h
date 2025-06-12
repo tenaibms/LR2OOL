@@ -19,6 +19,7 @@ namespace hooks::srcnumber {
     inline statistics::OnlineStandardDeviation stddev = statistics::OnlineStandardDeviation();
 
     inline Timer timer;
+    inline GreenNumber green_number;
 
     inline SafetyHookInline src_number_hook;
     inline SafetyHookMid random_address_hook;
