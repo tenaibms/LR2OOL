@@ -10,12 +10,14 @@ private:
     bool m_awaiting_keypress;
     unsigned int& m_keycode;
     char m_key_name_buffer[256];
+    std::string m_display_str;
 
     void ReadKey();
+    void FormatString();
 public:
     void Render();
     HotkeyWidget(const char* label, unsigned int& keycode) : m_label(label), m_keycode(keycode), m_awaiting_keypress(false) {
-        GetKeyNameText(MapVirtualKey(m_keycode, MAPVK_VK_TO_VSC) << 16, m_key_name_buffer, 256);
+        FormatString();
     }
 };
 
@@ -29,7 +31,6 @@ namespace overlay {
 
     /* show windows */
     inline bool open = false;
-    inline bool keybinds_open = false;
 
     /* keybind stuff */
     inline HotkeyWidget open_widget = HotkeyWidget("Open Menu", gui::menu_keybind);

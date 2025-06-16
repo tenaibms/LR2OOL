@@ -8,9 +8,6 @@ namespace hooks::mirror {
         const inline uintptr_t current_opt = 0x0FF848;
     }
 
-    /* data pointers */
-    inline int current_opt = *reinterpret_cast<int*>(offsets::current_opt);
-
     inline bool enabled = false;
     inline SafetyHookMid mirror_hook;
     inline SafetyHookMid reset_hook;

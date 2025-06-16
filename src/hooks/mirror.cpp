@@ -3,6 +3,7 @@
 void hooks::mirror::Install()
 {
     mirror_hook = safetyhook::create_mid(reinterpret_cast<void*>(offsets::mirror), [](safetyhook::Context& ctx) {
+        bool current_opt = *reinterpret_cast<bool*>(offsets::current_opt);
         if (enabled) current_opt == 1 ? ctx.ebx = current_opt : ctx.ebx = 0;
     });
 

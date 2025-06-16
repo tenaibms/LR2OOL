@@ -30,78 +30,89 @@ static void HelpMarker(const char* desc)
 
 void overlay::DrawMainWindow()
 {
+    /* should probably move these format calls to not be done in the rendering loop.. */
+    ImGui::SetNextWindowSizeConstraints(
+        ImVec2(350, 100),   
+        ImVec2(350, 1000)
+    );
     if (ImGui::Begin(std::format("LR2OOL v{}.{}.{}", version.major, version.minor, version.patch).c_str(), &open, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoBringToFrontOnFocus)) {
-        ImGui::SeparatorText("Hooks");
-        ImGui::Checkbox("Allow Course Mirroring", &hooks::mirror::enabled);
-        ImGui::Checkbox("Fix GAS Replays", &hooks::replay_fix.m_enabled);
-        ImGui::SameLine(); HelpMarker("Patches GAS replays to use the gauge you ended with, will do nothing if gauge doesn't change.");
+        if (ImGui::BeginTabBar("Tabbar")) {
+            if (ImGui::BeginTabItem("Hooks")) {
+                ImGui::Checkbox("Allow Course Mirroring", &hooks::mirror::enabled);
+                ImGui::Checkbox("Fix GAS Replays", &hooks::replay_fix.m_enabled);
+                ImGui::SameLine(); HelpMarker("Patches GAS replays to use the gauge you ended with, will do nothing if gauge doesn't change.");
+                ImGui::EndTabItem();
+            }
 
-        ImGui::SeparatorText("Hit Error");
-        ImGui::Checkbox("Enabled", &hiterror::enabled);
-        ImGui::BeginDisabled(!hiterror::enabled);
+            if(ImGui::BeginTabItem("Hit Error")) {
+                ImGui::Checkbox("Enabled", &hiterror::enabled);
+                ImGui::BeginDisabled(!hiterror::enabled);
 
-        ImGui::Checkbox("Show In Menu", &hiterror::open_config);
-        ImGui::SameLine(); HelpMarker("This lets you view hit error bar whenever the menu is opened.");
-        ImGui::Checkbox("Use EMA", &hiterror::using_ema);
-        ImGui::SameLine();
-        ImGui::Checkbox("Smooth EMA", &hiterror::smooth_ema);
-        ImGui::SliderInt("Width", &hiterror::width, 50, 500);
-        hiterror::bg_enabled = ImGui::IsItemHovered();
-        ImGui::SliderInt("Height", &hiterror::height, 2, 50);
-        ImGui::SliderInt("Thickness", &hiterror::thickness, 2, 20);
+                ImGui::Checkbox("Show In Menu", &hiterror::open_config);
+                ImGui::SameLine(); HelpMarker("This lets you view hit error bar whenever the menu is opened.");
+                ImGui::Checkbox("Use EMA", &hiterror::using_ema);
+                ImGui::SameLine();
+                ImGui::Checkbox("Smooth EMA", &hiterror::smooth_ema);
+                ImGui::SliderInt("Width", &hiterror::width, 50, 500);
+                hiterror::bg_enabled = ImGui::IsItemHovered();
+                ImGui::SliderInt("Height", &hiterror::height, 2, 50);
+                ImGui::SliderInt("Thickness", &hiterror::thickness, 2, 20);
 
-        ImGui::BeginDisabled(hiterror::using_ema);
-        ImGui::SliderInt("Number of Lines", &hiterror::lines, 1, BUFFER_MAX_SIZE);
-        ImGui::EndDisabled();
-        ImGui::BeginDisabled(!hiterror::using_ema);
-        ImGui::SliderFloat("EMA Alpha", &hiterror::ema.alpha, 0.0f, 1.0f);
-        ImGui::EndDisabled();
-        ImGui::SameLine(); HelpMarker("Higher alpha values cause the value of ema to shift more dramatically.");
-        
-        ImGui::EndDisabled();
+                ImGui::BeginDisabled(hiterror::using_ema);
+                ImGui::SliderInt("Number of Lines", &hiterror::lines, 1, BUFFER_MAX_SIZE);
+                ImGui::EndDisabled();
+                ImGui::BeginDisabled(!hiterror::using_ema);
+                ImGui::SliderFloat("EMA Alpha", &hiterror::ema.alpha, 0.0f, 1.0f);
+                ImGui::EndDisabled();
+                ImGui::SameLine(); HelpMarker("Higher alpha values cause the value of ema to shift more dramatically.");
 
+                ImGui::EndDisabled();
 
-        ImGuiColorEditFlags flags = ImGuiColorEditFlags_PickerHueWheel | ImGuiColorEditFlags_DisplayRGB | ImGuiColorEditFlags_NoOptions;
-        ImGui::SeparatorText("Colors");
-        ImGui::BeginDisabled(!hiterror::using_ema || !hiterror::enabled);
-        ColorEdit3U32("EMA", &hiterror::colors::ema, flags);
-        ImGui::EndDisabled();
-        ImGui::BeginDisabled(hiterror::using_ema || !hiterror::enabled);
-        ColorEdit3U32("P-Great", &hiterror::colors::pgreat, flags);
-        ColorEdit3U32("Great", &hiterror::colors::great, flags);
-        ColorEdit3U32("Good", &hiterror::colors::good, flags);
-        ColorEdit3U32("Combo Break", &hiterror::colors::cb, flags);
-        ImGui::EndDisabled();
+                ImGuiColorEditFlags flags = ImGuiColorEditFlags_PickerHueWheel | ImGuiColorEditFlags_DisplayRGB | ImGuiColorEditFlags_NoOptions;
+                ImGui::SeparatorText("Colors");
+                ImGui::BeginDisabled(!hiterror::using_ema || !hiterror::enabled);
+                ColorEdit3U32("EMA", &hiterror::colors::ema, flags);
+                ImGui::EndDisabled();
+                ImGui::BeginDisabled(hiterror::using_ema || !hiterror::enabled);
+                ColorEdit3U32("P-Great", &hiterror::colors::pgreat, flags);
+                ColorEdit3U32("Great", &hiterror::colors::great, flags);
+                ColorEdit3U32("Good", &hiterror::colors::good, flags);
+                ColorEdit3U32("Combo Break", &hiterror::colors::cb, flags);
+                ImGui::EndDisabled();
+                ImGui::EndTabItem();
+            }
 
-        ImGui::SeparatorText("Skin Tweaks");
-        ImGui::Checkbox("Relative F/S", &drawnum::fs_toggle);
-        ImGui::SameLine(); HelpMarker("Moves the fast/slow display when judge text is moved.");
-        ImGui::Checkbox("Relative Pacemaker", &drawnum::pacemaker_toggle);
-        ImGui::SameLine(); HelpMarker("Moves the pacemaker when judge text is moved.");
+            if(ImGui::BeginTabItem("Skin Tweaks")) {
+                ImGui::Checkbox("Relative F/S", &drawnum::fs_toggle);
+                ImGui::SameLine(); HelpMarker("Moves the fast/slow display when judge text is moved.");
+                ImGui::Checkbox("Relative Pacemaker", &drawnum::pacemaker_toggle);
+                ImGui::SameLine(); HelpMarker("Moves the pacemaker when judge text is moved.");
+                ImGui::EndTabItem();
+            }
 
-        ImGui::Separator();
-        if (ImGui::Button("Keybinds"))
-            if (!keybinds_open)
-                keybinds_open = true;
-        ImGui::SameLine();
-        if (ImGui::Button("Reload Config"))
-            config::LoadConfig();
-        ImGui::SameLine();
-        if (ImGui::Button("Save Config"))
-            config::SaveConfig();
-        
+            if (ImGui::BeginTabItem("Keybinds")) {
+                DrawKeybindsWindow();
+                ImGui::EndTabItem();
+            }
+
+            ImGui::Separator();
+            if (ImGui::Button("Reload Config"))
+                config::LoadConfig();
+            ImGui::SameLine();
+            if (ImGui::Button("Save Config"))
+                config::SaveConfig();
+
+        }
+        ImGui::EndTabBar();
     }
     ImGui::End();
 }
 
 void overlay::DrawKeybindsWindow()
 {
-    if (ImGui::Begin("Keybinds", &keybinds_open, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings)) {
-        open_widget.Render();
-        ImGui::Text("End - Uninject LR2OOL");
-    }
-    ImGui::End();
-}
+    open_widget.Render();
+    ImGui::Text("End - Uninject LR2OOL");
+ }
 
 void overlay::DrawBackgroundDim()
 {
@@ -218,9 +229,6 @@ void overlay::Render()
     if (opacity != 0.f)
     {
         DrawMainWindow();
-        if (keybinds_open) {
-            DrawKeybindsWindow();
-        }
     }
 
     ImGui::GetStyle().Alpha = 1.0;
@@ -229,25 +237,30 @@ void overlay::Render()
 void HotkeyWidget::Render()
 {
     ImGui::PushID(m_label);
-    if (ImGui::Button(m_key_name_buffer, ImVec2{ ImGui::GetFontSize() * 4, 0 })) {
+    if (ImGui::Button(m_display_str.c_str(), ImVec2{ImGui::GetContentRegionAvail().x, 0})) {
         m_awaiting_keypress = true;
-        strcpy_s(m_key_name_buffer, 256, "...");
+        m_display_str = std::format("{}: ...", m_label);
     }
     if(m_awaiting_keypress) ReadKey();
     ImGui::SameLine();
-    ImGui::Text(m_label);
 
     ImGui::PopID();
 }
 
 void HotkeyWidget::ReadKey()
 {
-    for (size_t i = 0; i < 256; ++i) {
+    for (size_t i = 7; i < 243; ++i) {
         if (GetAsyncKeyState(i) & 0x8000) {
             m_keycode = i;
-            GetKeyNameText(MapVirtualKey(m_keycode, MAPVK_VK_TO_VSC) << 16, m_key_name_buffer, 256);
+            FormatString();
             m_awaiting_keypress = false;
         }
     }
     Sleep(2);
+}
+
+void HotkeyWidget::FormatString()
+{
+    GetKeyNameText(MapVirtualKey(m_keycode, MAPVK_VK_TO_VSC) << 16, m_key_name_buffer, 256);
+    m_display_str = std::format("{}: {}", m_label, m_key_name_buffer);
 }
