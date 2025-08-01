@@ -14,8 +14,6 @@
 void hooks::Setup()
 {
     cursor::Install();
-    mirror::Install();
-    srcnumber::Install();
     updategamestate::Install();
     drawnum::Install();
     slider::Install();

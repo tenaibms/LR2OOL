@@ -25,7 +25,7 @@
 void config::LoadConfig()
 {
     if (file.read(ini)) {
-        READ_BOOL("hooks", "mirror", hooks::mirror::enabled);
+        READ_BOOL("hooks", "mirror", hooks::mirror.m_enabled);
         READ_BOOL("hooks", "mirror", hooks::replay_fix.m_enabled);
 
         READ_INT("hit_error", "width", hiterror::width);
@@ -54,7 +54,7 @@ void config::LoadConfig()
 }
 
 void config::SaveConfig() {
-    SET_BOOL("hooks", "mirror", hooks::mirror::enabled);
+    SET_BOOL("hooks", "mirror", hooks::mirror.m_enabled);
     SET_BOOL("hooks", "mirror", hooks::replay_fix.m_enabled);
 
     SET_INT("hit_error", "width", hiterror::width);

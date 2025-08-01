@@ -11,7 +11,7 @@ void hooks::updategamestate::Install()
             /* manually setting this variable feels inconsistent given precense of helper functions */
             hiterror::open = true;
             hiterror::Reset();
-            srcnumber::Reset();
+            src_number.Reset();
         }
         else {
             hiterror::open = false;

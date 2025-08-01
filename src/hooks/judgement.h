@@ -11,8 +11,6 @@ enum class Judgement {
 };
 
 class JudgementProcessing {
-public:
-	JudgementProcessing();
 private:
 	struct {
 		const uintptr_t process_note_single = 0x418850;
@@ -26,13 +24,15 @@ private:
 		} judge_to_score_single;
 	} m_offsets;
 	
-	int note_time = 0;
-	int current_time = 0;
+	int m_note_time = 0;
+	int m_current_time = 0;
 
 	std::vector<SafetyHookMid> m_mid_hooks;
-	SafetyHookInline process_note_single_hook;
+	SafetyHookInline m_process_note_single_hook;
 
 	static int __cdecl OnProcessNoteSingle(void* g, int lane, int keypress, int timing, int player);
 	static void OnCallJudgeToScore(SafetyHookContext& ctx);
 	static void OnStoreNoteTime(SafetyHookContext& ctx);
+public:
+	JudgementProcessing();
 };

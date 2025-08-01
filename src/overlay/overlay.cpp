@@ -38,7 +38,7 @@ void overlay::DrawMainWindow()
     if (ImGui::Begin(std::format("LR2OOL v{}.{}.{}", version.major, version.minor, version.patch).c_str(), &open, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoBringToFrontOnFocus)) {
         if (ImGui::BeginTabBar("Tabbar")) {
             if (ImGui::BeginTabItem("Hooks")) {
-                ImGui::Checkbox("Allow Course Mirroring", &hooks::mirror::enabled);
+                ImGui::Checkbox("Allow Course Mirroring", &hooks::mirror.m_enabled);
                 ImGui::Checkbox("Fix GAS Replays", &hooks::replay_fix.m_enabled);
                 ImGui::SameLine(); HelpMarker("Patches GAS replays to use the gauge you ended with, will do nothing if gauge doesn't change.");
                 ImGui::EndTabItem();
