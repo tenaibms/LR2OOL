@@ -13,7 +13,6 @@
 void Setup(HMODULE hModule)
 {
     try {
-        LR2::Init();
         gui::Setup();
         dx9::Setup();
     }
@@ -44,6 +43,8 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReser
     switch (ul_reason_for_call)
     {
     case DLL_PROCESS_ATTACH: {
+        LR2::Init();
+
         const HANDLE thread = CreateThread(
             NULL,
             0,

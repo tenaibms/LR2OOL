@@ -3,17 +3,25 @@
 
 class Mirror {
 public:
-    Mirror(); // Constructor installs hooks
+    Mirror();
 
     bool m_enabled = false;
 
 private:
     struct {
-        static constexpr uintptr_t mirror = 0x433A5A;
-        static constexpr uintptr_t reset = 0x433A61;
-        static constexpr uintptr_t current_opt = 0x0FF848;
+        const uintptr_t random_p1 = 0x433A5A;
+        const uintptr_t random_p2 = 0x433A61;
+        const uintptr_t reset_1 = 0x433A68;
+        const uintptr_t dp_flip = 0x433B09;
+        const uintptr_t reset_2 = 0x433B10;
     } m_offsets;
 
-    SafetyHookMid m_mirror_hook;
-    SafetyHookMid m_reset_hook;
+    static bool IsSPMirror();
+    static bool IsDPMirror();
+
+    SafetyHookMid m_random_p1_hook;
+    SafetyHookMid m_random_p2_hook;
+    SafetyHookMid reset_1_hook;
+    SafetyHookMid dp_flip_hook;
+    SafetyHookMid reset_2_hook;
 };
