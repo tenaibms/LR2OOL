@@ -1,94 +1,12 @@
 #include "skin.h"
 #include "hooks/hooks.h"
+#include "features/greennumber.h"
+#include "hooks/updategamestate.h"
 #include <LR2Bindings.hpp>
 #include <LR2Typedefs.hpp>
 
-static int lift_number_p1;
-static int lift_number_p2;
-
-uintptr_t slider_by_time = 0x49C0E0;
-uintptr_t return_addr = 0x413EC8;
-
-__declspec(naked) int LiftSliderP1(void) {
-	__asm {
-		// need to preserve our registers before we call this function as it cobbles them
-		push eax
-		push ebx
-		push ecx
-		push edx
-		push esi
-	}
-
-	lift_number_p1 = hooks::src_number.m_green_number.GetLiftNumber(1);
-
-	__asm {
-		pop esi
-		pop edx
-		pop ecx
-		pop ebx
-		pop eax
-
-		// calls SliderByTime() with our lfit
-		mov ecx, [esp + 0x2C]
-		push ebx
-		lea edx, [esi + 0x1D58C]
-		push edx
-		mov edx, [ecx + 0x18A4]
-		push offset lift_number_p1
-		push 1000
-		push 0
-		push edi
-		add edx, ebp
-		push edx
-		push eax
-		add ecx, 0x9AFC
-		push ecx
-		call slider_by_time
-		add esp, 0x24
-
-		jmp return_addr;
-	}
-}
-__declspec(naked) int LiftSliderP2(void) {
-	__asm {
-		// need to preserve our registers before we call this function as it cobbles them
-		push eax
-		push ebx
-		push ecx
-		push edx
-		push esi
-	}
-
-	lift_number_p2 = hooks::src_number.m_green_number.GetLiftNumber(2);
-
-	__asm {
-		pop esi
-		pop edx
-		pop ecx
-		pop ebx
-		pop eax
-
-		// calls SliderByTime() with our lfit
-		mov ecx, [esp + 0x2C]
-		push ebx
-		lea edx, [esi + 0x1D58C]
-		push edx
-		mov edx, [ecx + 0x18A4]
-		push offset lift_number_p2
-		push 1000
-		push 0
-		push edi
-		add edx, ebp
-		push edx
-		push eax
-		add ecx, 0x9AFC
-		push ecx
-		call slider_by_time
-		add esp, 0x24
-
-		jmp return_addr;
-	}
-}
+using slider_by_time_type = int(*)(LR2::DrawingBuf*, LR2::SRCstruct*, LR2::DSTstruct*, LR2::Timer*, int, int, int*, LR2::inputStructure*, int);
+slider_by_time_type SliderByTime = (slider_by_time_type)0x49C0E0;
 
 void SkinMisc::OnDrawLN(safetyhook::Context& ctx)
 {
@@ -96,26 +14,30 @@ void SkinMisc::OnDrawLN(safetyhook::Context& ctx)
 	*(float*)(ctx.esp + 0x20) += ctx.esi < 10 ? adjust->note_1p_y : adjust->note_2p_y;
 }
 
+void SkinMisc::OnSliderCmp(safetyhook::Context& ctx)
+{
+	int i = ctx.ebx;
+	int case_num = ctx.ecx + 1;
+	LR2::skstruct* sk = &LR2::pGame->skstruct;
+
+	if (hooks::updategamestate::gamestate == hooks::updategamestate::GAMESTATE::playing) {
+		hooks::skin_misc.m_lift_number_p1 = hooks::src_number.m_green_number.GetLiftNumber(1);
+		hooks::skin_misc.m_lift_number_p2 = hooks::src_number.m_green_number.GetLiftNumber(2);
+	}
+
+	if (case_num == 27) {
+		SliderByTime(&sk->drBuf, &sk->otherObject[2].src[i], &sk->otherObject[2].dst[i], (LR2::Timer*)ctx.edi, 0, 1000, &hooks::skin_misc.m_lift_number_p1, &LR2::pGame->KeyInput, i);
+	}
+	else if (case_num == 28) {
+		SliderByTime(&sk->drBuf, &sk->otherObject[2].src[i], &sk->otherObject[2].dst[i], (LR2::Timer*)ctx.edi, 0, 1000, &hooks::skin_misc.m_lift_number_p2, &LR2::pGame->KeyInput, i);
+	}
+}
+
 SkinMisc::SkinMisc()
 {
-	draw_ln_hook = safetyhook::create_mid(offsets.draw_ln, OnDrawLN);
+	m_draw_ln_hook = safetyhook::create_mid(m_offsets.draw_ln, OnDrawLN);
+	m_slider_hook = safetyhook::create_mid(m_offsets.cmp, OnSliderCmp);
 
-	Patch(offsets.switch_statement_27, LiftSliderP1);
-	Patch(offsets.switch_statement_28, LiftSliderP2);
-	Patch(offsets.cmp, (uint8_t)0x1B);
-}
-
-SkinMisc::~SkinMisc()
-{
-	Patch(offsets.cmp, (uint8_t)0x19);
-}
-
-template<typename T>
-inline void SkinMisc::Patch(uintptr_t offset, T value)
-{
-	DWORD old_protect;
-
-	VirtualProtect(reinterpret_cast<LPVOID>(offset), sizeof(T), PAGE_EXECUTE_READWRITE, (PDWORD)&old_protect);
-	*(T*)offset = (T)value;
-	VirtualProtect(reinterpret_cast<LPVOID>(offset), sizeof(T), PAGE_EXECUTE_READ, (PDWORD)&old_protect);
+	m_lift_number_p1 = 0;
+	m_lift_number_p2 = 0;
 }
