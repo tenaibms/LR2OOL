@@ -250,6 +250,7 @@ void HotkeyWidget::Render()
 void HotkeyWidget::ReadKey()
 {
     for (size_t i = 7; i < 243; ++i) {
+        if (i >= 0x15 && i <= 0x1A) continue;
         if (GetAsyncKeyState(i) & 0x8000) {
             m_keycode = i;
             FormatString();

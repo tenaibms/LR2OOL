@@ -4,7 +4,6 @@
 #include "srcnumber.h"
 #include "updategamestate.h"
 #include "hooks/hooks.h"
-#include "hooks/dstflag.h"
 #include "hooks/loadbms.h"
 #include <LR2Bindings.hpp>
 

@@ -3,6 +3,7 @@
 #include "hooks/judgement.h"
 #include "hooks/srcnumber.h"
 #include "hooks/mirror.h"
+#include "hooks/skin.h"
 
 namespace hooks {
     void Setup();
@@ -12,4 +13,5 @@ namespace hooks {
     inline SrcNumber src_number;
     inline JudgementProcessing judgement_processing;
     inline Mirror mirror;
+    inline SkinMisc skin_misc;
 }

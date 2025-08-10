@@ -6,7 +6,7 @@ void hooks::updategamestate::Install()
 {
     gamestate_hook = safetyhook::create_mid(reinterpret_cast<void*>(offsets::change_gamestate), [](safetyhook::Context& ctx) {
         gamestate = static_cast<GAMESTATE>(ctx.eax);
-        if (static_cast<int>(gamestate) == 13 - 2) gamestate = GAMESTATE::result;
+        if (static_cast<int>(gamestate) == 13) gamestate = GAMESTATE::result;
         if (gamestate == GAMESTATE::playing) {
             /* manually setting this variable feels inconsistent given precense of helper functions */
             hiterror::open = true;
