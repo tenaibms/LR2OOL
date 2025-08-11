@@ -2,6 +2,7 @@
 #include "config.h"
 
 #include "graphics/gui.h"
+#include "overlay/overlay.h"
 #include "hooks/replayfix.h"
 #include "hooks/mirror.h"
 #include "hooks/drawnum.h"
@@ -46,7 +47,7 @@ void config::LoadConfig()
         READ_BOOL("skin_tweaks", "pacemaker", drawnum::pacemaker_toggle);
 
         READ_INT("keybinds", "menu", gui::menu_keybind);
-        
+        overlay::open_widget.FormatString();
     }
     else {
         config::SaveConfig();

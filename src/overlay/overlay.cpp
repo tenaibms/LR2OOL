@@ -1,6 +1,7 @@
 #include <Windows.h>
 #include <imgui.h>
 #include <format>
+#include <array>
 
 #include "graphics/gui.h"
 
@@ -31,38 +32,39 @@ static void HelpMarker(const char* desc)
 void overlay::DrawMainWindow()
 {
     /* should probably move these format calls to not be done in the rendering loop.. */
-    ImGui::SetNextWindowSizeConstraints(
-        ImVec2(350, 100),   
-        ImVec2(350, 1000)
-    );
-    if (ImGui::Begin(std::format("LR2OOL v{}.{}.{}", version.major, version.minor, version.patch).c_str(), &open, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoBringToFrontOnFocus)) {
+    ImGui::SetNextWindowSize(ImVec2(640 - 40, 480 - 40));
+    ImGui::SetNextWindowPos(ImVec2((gui::internal_resolution[0] - 640 + 40) / 2, (gui::internal_resolution[1] - 480 + 40) / 2), ImGuiCond_Once);
+
+    if (ImGui::Begin(std::format("LR2OOL v{}.{}.{}", version.major, version.minor, version.patch).c_str(), &open, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoSavedSettings )) {
+        ImGui::PushItemWidth(ImGui::GetWindowWidth() * 0.5f);
         if (ImGui::BeginTabBar("Tabbar")) {
-            if (ImGui::BeginTabItem("Hooks")) {
+            if (ImGui::BeginTabItem("Features")) {
                 ImGui::Checkbox("Allow Course Mirroring", &hooks::mirror.m_enabled);
                 ImGui::Checkbox("Fix GAS Replays", &hooks::replay_fix.m_enabled);
                 ImGui::SameLine(); HelpMarker("Patches GAS replays to use the gauge you ended with, will do nothing if gauge doesn't change.");
+                ImGui::Checkbox("Hit Error", &hiterror::enabled);
                 ImGui::EndTabItem();
             }
-
+            
+            ImGui::BeginDisabled(!hiterror::enabled);
             if(ImGui::BeginTabItem("Hit Error")) {
-                ImGui::Checkbox("Enabled", &hiterror::enabled);
-                ImGui::BeginDisabled(!hiterror::enabled);
-
                 ImGui::Checkbox("Show In Menu", &hiterror::open_config);
                 ImGui::SameLine(); HelpMarker("This lets you view hit error bar whenever the menu is opened.");
                 ImGui::Checkbox("Use EMA", &hiterror::using_ema);
-                ImGui::SameLine();
-                ImGui::Checkbox("Smooth EMA", &hiterror::smooth_ema);
+                ImGui::BeginDisabled(!hiterror::using_ema);
+                    ImGui::Checkbox("Smooth EMA", &hiterror::smooth_ema);
+                ImGui::EndDisabled();
+
                 ImGui::SliderInt("Width", &hiterror::width, 50, 500);
                 hiterror::bg_enabled = ImGui::IsItemHovered();
                 ImGui::SliderInt("Height", &hiterror::height, 2, 50);
-                ImGui::SliderInt("Thickness", &hiterror::thickness, 2, 20);
+                ImGui::SliderInt("Thickness", &hiterror::thickness, 2, 50);
 
                 ImGui::BeginDisabled(hiterror::using_ema);
-                ImGui::SliderInt("Number of Lines", &hiterror::lines, 1, BUFFER_MAX_SIZE);
+                    ImGui::SliderInt("Number of Lines", &hiterror::lines, 1, BUFFER_MAX_SIZE);
                 ImGui::EndDisabled();
                 ImGui::BeginDisabled(!hiterror::using_ema);
-                ImGui::SliderFloat("EMA Alpha", &hiterror::ema.alpha, 0.0f, 1.0f);
+                    ImGui::SliderFloat("EMA Alpha", &hiterror::ema.alpha, 0.0f, 1.0f);
                 ImGui::EndDisabled();
                 ImGui::SameLine(); HelpMarker("Higher alpha values cause the value of ema to shift more dramatically.");
 
@@ -78,9 +80,9 @@ void overlay::DrawMainWindow()
                 ColorEdit3U32("Great", &hiterror::colors::great, flags);
                 ColorEdit3U32("Good", &hiterror::colors::good, flags);
                 ColorEdit3U32("Combo Break", &hiterror::colors::cb, flags);
-                ImGui::EndDisabled();
                 ImGui::EndTabItem();
             }
+            ImGui::EndDisabled();
 
             if(ImGui::BeginTabItem("Skin Tweaks")) {
                 ImGui::Checkbox("Relative F/S", &drawnum::fs_toggle);
@@ -95,6 +97,12 @@ void overlay::DrawMainWindow()
                 ImGui::EndTabItem();
             }
 
+            float footer_height = ImGui::GetFrameHeightWithSpacing() + 1; /* accounts for seperator size */
+
+            float avail_y = ImGui::GetContentRegionAvail().y;
+            ImGui::SetCursorPosY(ImGui::GetCursorPosY() + avail_y - footer_height);
+
+
             ImGui::Separator();
             if (ImGui::Button("Reload Config"))
                 config::LoadConfig();
@@ -102,10 +110,13 @@ void overlay::DrawMainWindow()
             if (ImGui::Button("Save Config"))
                 config::SaveConfig();
 
+            ImGui::PopItemWidth();
+
         }
         ImGui::EndTabBar();
     }
     ImGui::End();
+
 }
 
 void overlay::DrawKeybindsWindow()
@@ -140,9 +151,9 @@ void overlay::DrawStartText()
     ImGui::SetNextWindowPos({ 1 - ImGui::GetStyle().WindowPadding.x - ImGui::GetStyle().WindowBorderSize , 0 - ImGui::GetStyle().WindowPadding.y - ImGui::GetStyle().WindowBorderSize - 1 });
     ImGui::Begin("popup", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav);
 #if _DEBUG
-    ImGui::TextColored({ 1.0, 1.0f, 1.0f, popup_opacity }, "LR2OOL DEBUG v%i.%i.%i loaded! Press <Insert> to display the menu.", version.major, version.minor, version.patch);
+    ImGui::TextColored({ 1.0, 1.0f, 1.0f, popup_opacity }, "LR2OOL DEBUG v%i.%i.%i loaded! Press <%s> to display the menu.", version.major, version.minor, version.patch, open_widget.GetKeyNameBuffer());
 #else
-    ImGui::TextColored({ 1.0, 1.0f, 1.0f, popup_opacity }, "LR2OOL v%i.%i.%i loaded! Press <Insert> to display the menu.", version.major, version.minor, version.patch);
+    ImGui::TextColored({ 1.0, 1.0f, 1.0f, popup_opacity }, "LR2OOL v%i.%i.%i loaded! Press <%s> to display the menu.", version.major, version.minor, version.patch, open_widget.GetKeyNameBuffer());
 #endif
     ImGui::End();
 }
@@ -224,10 +235,9 @@ ImU32 overlay::ReplaceAlpha(ImU32 color, float alpha)
 void overlay::Render()
 {
     DrawStartText();
-    DrawBackgroundDim();
+    //DrawBackgroundDim();
 
-    if (opacity != 0.f)
-    {
+    if (open) {
         DrawMainWindow();
     }
 
@@ -247,6 +257,34 @@ void HotkeyWidget::Render()
     ImGui::PopID();
 }
 
+const char* HotkeyWidget::GetKeyNameBuffer()
+{
+    return m_key_name_buffer;
+}
+
+static constexpr std::array<bool, 256> create_is_extended() {
+    std::array<bool, 256> arr = {};
+
+    arr[VK_RIGHT] = true;
+    arr[VK_LEFT] = true;
+    arr[VK_UP] = true;
+    arr[VK_DOWN] = true;
+    arr[VK_PRIOR] = true;
+    arr[VK_NEXT] = true;
+    arr[VK_END] = true;
+    arr[VK_HOME] = true;
+    arr[VK_INSERT] = true;
+    arr[VK_DELETE] = true;
+    arr[VK_NUMLOCK] = true;
+    arr[VK_RCONTROL] = true;
+    arr[VK_RMENU] = true;
+    arr[VK_APPS] = true;
+
+    return arr;
+}
+
+constexpr auto is_extended = create_is_extended();
+
 void HotkeyWidget::ReadKey()
 {
     for (size_t i = 7; i < 243; ++i) {
@@ -262,6 +300,8 @@ void HotkeyWidget::ReadKey()
 
 void HotkeyWidget::FormatString()
 {
-    GetKeyNameText(MapVirtualKey(m_keycode, MAPVK_VK_TO_VSC) << 16, m_key_name_buffer, 256);
-    m_display_str = std::format("{}: {}", m_label, m_key_name_buffer);
+    int l_param = MapVirtualKey(m_keycode, MAPVK_VK_TO_VSC_EX) << 16;
+    if (is_extended[m_keycode]) l_param |= (1 << 24);
+    GetKeyNameText(l_param, m_key_name_buffer, 256);
+        m_display_str = std::format("{}: {}", m_label, m_key_name_buffer);
 }

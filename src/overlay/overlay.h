@@ -13,12 +13,13 @@ private:
     std::string m_display_str;
 
     void ReadKey();
-    void FormatString();
 public:
     void Render();
     HotkeyWidget(const char* label, unsigned int& keycode) : m_label(label), m_keycode(keycode), m_awaiting_keypress(false) {
         FormatString();
     }
+    const char* GetKeyNameBuffer();
+    void FormatString(); /* this needs to be public until overlay becomes a class */
 };
 
 namespace overlay {
@@ -34,7 +35,7 @@ namespace overlay {
 
     /* keybind stuff */
     inline HotkeyWidget open_widget = HotkeyWidget("Open Menu", gui::menu_keybind);
-    //inline HotkeyWidget keybinds_widget;
+
 
     /* helper functions */
     float FadeOut(float current_opacity, float max_opacity, float min_opacity, float fade_time, float delta_time);
