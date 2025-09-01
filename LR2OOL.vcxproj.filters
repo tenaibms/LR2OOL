@@ -52,14 +52,13 @@
     <ClCompile Include="src\hooks\judgement.cpp" />
     <ClCompile Include="src\features\hiterror.cpp" />
     <ClCompile Include="src\features\greennumber.cpp" />
-    <ClCompile Include="src\hooks\drawnum.cpp" />
     <ClCompile Include="src\hooks\loadbms.cpp" />
     <ClCompile Include="src\hooks\input.cpp" />
     <ClCompile Include="src\features\timeplayed.cpp" />
     <ClCompile Include="src\features\totaltime.cpp" />
     <ClCompile Include="src\features\totaltime.h" />
     <ClCompile Include="ext\lr2mem\lr2mem.cpp" />
-    <ClCompile Include="src\hooks\skin.cpp" />
+    <ClCompile Include="src\hooks\skinmisc.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\config\config.h">
@@ -96,7 +95,6 @@
     <ClInclude Include="src\hooks\judgement.h" />
     <ClInclude Include="src\features\hiterror.h" />
     <ClInclude Include="src\features\greennumber.h" />
-    <ClInclude Include="src\hooks\drawnum.h" />
     <ClInclude Include="src\hooks\loadbms.h" />
     <ClInclude Include="src\hooks\input.h" />
     <ClInclude Include="src\features\timeplayed.h" />
@@ -119,6 +117,6 @@
     <ClInclude Include="include\LR2Typedefs.hpp" />
     <ClInclude Include="include\safetyhook.hpp" />
     <ClInclude Include="include\Zydis.h" />
-    <ClInclude Include="src\hooks\skin.h" />
+    <ClInclude Include="src\hooks\skinmisc.h" />
   </ItemGroup>
 </Project>

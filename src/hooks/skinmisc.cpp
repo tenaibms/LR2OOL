@@ -1,4 +1,4 @@
-#include "skin.h"
+#include "skinmisc.h"
 #include "hooks/hooks.h"
 #include "features/greennumber.h"
 #include "hooks/updategamestate.h"
@@ -33,11 +33,21 @@ void SkinMisc::OnSliderCmp(safetyhook::Context& ctx)
 	}
 }
 
+int SkinMisc::OnDrawNum(LR2::DrawingBuf* drb, LR2::SRCstruct* src, LR2::DSTstruct* dst, LR2::Timer* T, int number, int x, int y)
+{
+	if (src->op1 == 210 || src->op1 == 211 && hooks::skin_misc.m_fs) {
+		y = LR2::pGame->skstruct.adjust.judge_y;
+	}
+	if (src->op1 == 108 && LR2::pGame->config.play.play_ghost == 1 && hooks::skin_misc.m_pacemaker) {
+		y = LR2::pGame->skstruct.adjust.judge_y;
+	}
+
+	return hooks::skin_misc.m_draw_num_hook.call<int>(drb, src, dst, T, number, x, y);
+}
+
 SkinMisc::SkinMisc()
 {
 	m_draw_ln_hook = safetyhook::create_mid(m_offsets.draw_ln, OnDrawLN);
 	m_slider_hook = safetyhook::create_mid(m_offsets.cmp, OnSliderCmp);
-
-	m_lift_number_p1 = 0;
-	m_lift_number_p2 = 0;
+	m_draw_num_hook = safetyhook::create_inline((void*)m_offsets.draw_num, OnDrawNum);
 }

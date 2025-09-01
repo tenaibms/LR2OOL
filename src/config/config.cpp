@@ -5,7 +5,7 @@
 #include "overlay/overlay.h"
 #include "hooks/replayfix.h"
 #include "hooks/mirror.h"
-#include "hooks/drawnum.h"
+#include "hooks/skinmisc.h"
 
 #include "features/hiterror.h"
 
@@ -43,8 +43,8 @@ void config::LoadConfig()
         READ_INT_16("colors", "good", hiterror::colors::good);
         READ_INT_16("colors", "cb", hiterror::colors::cb);
 
-        READ_BOOL("skin_tweaks", "fs", drawnum::fs_toggle);
-        READ_BOOL("skin_tweaks", "pacemaker", drawnum::pacemaker_toggle);
+        READ_BOOL("skin_tweaks", "fs", hooks::skin_misc.m_fs);
+        READ_BOOL("skin_tweaks", "pacemaker", hooks::skin_misc.m_pacemaker);
 
         READ_INT("keybinds", "menu", gui::menu_keybind);
         overlay::open_widget.FormatString();
@@ -72,8 +72,8 @@ void config::SaveConfig() {
     SET_INT_16("colors", "good", hiterror::colors::good);
     SET_INT_16("colors", "cb", hiterror::colors::cb);
 
-    SET_BOOL("skin_tweaks", "fs", drawnum::fs_toggle);
-    SET_BOOL("skin_tweaks", "pacemaker", drawnum::pacemaker_toggle);
+    SET_BOOL("skin_tweaks", "fs", hooks::skin_misc.m_fs);
+    SET_BOOL("skin_tweaks", "pacemaker", hooks::skin_misc.m_pacemaker);
 
     SET_INT("keybinds", "menu", gui::menu_keybind);
 

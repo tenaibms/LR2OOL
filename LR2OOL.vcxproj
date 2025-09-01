@@ -159,11 +159,10 @@
     <ClCompile Include="src\features\greennumber.cpp" />
     <ClCompile Include="src\features\timeplayed.cpp" />
     <ClCompile Include="src\features\totaltime.cpp" />
-    <ClCompile Include="src\hooks\drawnum.cpp" />
     <ClCompile Include="src\hooks\input.cpp" />
     <ClCompile Include="src\hooks\judgement.cpp" />
     <ClCompile Include="src\hooks\loadbms.cpp" />
-    <ClCompile Include="src\hooks\skin.cpp" />
+    <ClCompile Include="src\hooks\skinmisc.cpp" />
     <ClCompile Include="src\hooks\updategamestate.cpp" />
     <ClCompile Include="src\hooks\replayfix.cpp" />
     <ClCompile Include="src\init.cpp" />
@@ -205,13 +204,12 @@
     <ClInclude Include="src\graphics\gui.h" />
     <ClInclude Include="src\graphics\dx9.h" />
     <ClInclude Include="src\features\hiterror.h" />
-    <ClInclude Include="src\hooks\drawnum.h" />
     <ClInclude Include="src\hooks\hooks.h" />
     <ClInclude Include="src\hooks\cursor.h" />
     <ClInclude Include="src\hooks\input.h" />
     <ClInclude Include="src\hooks\judgement.h" />
     <ClInclude Include="src\hooks\loadbms.h" />
-    <ClInclude Include="src\hooks\skin.h" />
+    <ClInclude Include="src\hooks\skinmisc.h" />
     <ClInclude Include="src\hooks\updategamestate.h" />
     <ClInclude Include="src\hooks\replayfix.h" />
     <ClInclude Include="src\overlay\imguistyle.h" />

@@ -10,7 +10,6 @@
 
 #include "hooks/mirror.h"
 #include "hooks/replayfix.h"
-#include "hooks/drawnum.h"
 
 #include "features/hiterror.h"
 
@@ -85,9 +84,9 @@ void overlay::DrawMainWindow()
             ImGui::EndDisabled();
 
             if(ImGui::BeginTabItem("Skin Tweaks")) {
-                ImGui::Checkbox("Relative F/S", &drawnum::fs_toggle);
+                ImGui::Checkbox("Relative F/S", &hooks::skin_misc.m_fs);
                 ImGui::SameLine(); HelpMarker("Moves the fast/slow display when judge text is moved.");
-                ImGui::Checkbox("Relative Pacemaker", &drawnum::pacemaker_toggle);
+                ImGui::Checkbox("Relative Pacemaker", &hooks::skin_misc.m_pacemaker);
                 ImGui::SameLine(); HelpMarker("Moves the pacemaker when judge text is moved.");
                 ImGui::EndTabItem();
             }
