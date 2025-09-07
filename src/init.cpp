@@ -14,14 +14,7 @@ void Setup(HMODULE hModule)
 {
     try {
         gui::Setup();
-    }
-    catch (const std::exception& error) {
-        MessageBox(0, error.what(), "Error Occured", MB_OK | MB_ICONEXCLAMATION);
-        goto cleanup;
-    }
-    while (!LR2::isInit) Sleep(1);
-    
-    try {
+        while (!LR2::isInit) Sleep(1);
         dx9::Setup();
     }
     catch (const std::exception& error) {
