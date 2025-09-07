@@ -107,7 +107,8 @@ bool gui::SetupDirectX() noexcept
     params.MultiSampleQuality = NULL;
     params.SwapEffect = D3DSWAPEFFECT_DISCARD;
     params.hDeviceWindow = window;
-    params.Windowed = (GetWindowLongPtr(params.hDeviceWindow, GWL_STYLE) & WS_POPUP) != 0 ? FALSE : TRUE;;
+    params.Windowed = 1;
+    //params.Windowed = (GetWindowLongPtr(params.hDeviceWindow, GWL_STYLE) & WS_POPUP) != 0 ? FALSE : TRUE;;
     params.EnableAutoDepthStencil = 0;
     params.AutoDepthStencilFormat = D3DFMT_UNKNOWN;
     params.Flags = NULL;

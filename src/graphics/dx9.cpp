@@ -10,9 +10,7 @@
 
 
 HRESULT __stdcall dx9::hook_end_scene(IDirect3DDevice9* device) noexcept
-{
-    const auto result = end_scene_hook.stdcall<HRESULT>(device);
-    
+{    
     if (!gui::setup) {
         gui::SetupMenu(device);
     }
@@ -21,13 +19,21 @@ HRESULT __stdcall dx9::hook_end_scene(IDirect3DDevice9* device) noexcept
         gui::Reset(device);
     }
 
-    gui::Render();
+    IDirect3DSurface9* backbuffer;
+    if (SUCCEEDED(device->GetBackBuffer(0, 0, D3DBACKBUFFER_TYPE_MONO, &backbuffer))) {
+        gui::Render();
+        backbuffer->Release();
+    }
 
-    return result;
+    return end_scene_hook.stdcall<HRESULT>(device);;
 }
 
 HRESULT __stdcall dx9::hook_reset(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* params)
 {
+    if (device == NULL) {
+        return reset_hook.stdcall<HRESULT>(device, params);
+    }
+
     ImGui_ImplDX9_InvalidateDeviceObjects();
     const auto result = reset_hook.stdcall<HRESULT>(device, params);
     if(SUCCEEDED(result)) ImGui_ImplDX9_CreateDeviceObjects();

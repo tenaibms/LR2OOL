@@ -14,9 +14,11 @@ uint8_t Input::OnGetMouseInput()
 
 	uint8_t result = input.m_on_get_mouse_input_hook.call<uint8_t>();
 
-	ImGuiIO& io = ImGui::GetIO();
+	if(gui::setup) {
+		ImGuiIO& io = ImGui::GetIO();
 
-	if (overlay::open && io.WantCaptureMouse)
-		return 0;
-	else return result;
+		if (overlay::open && io.WantCaptureMouse)
+			return 0;
+	}
+	return result;
 }

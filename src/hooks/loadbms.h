@@ -13,11 +13,6 @@ namespace loadbms {
 	inline unsigned random_1p;
 	inline unsigned random_2p;
 
-	inline int count;
-	inline double sum;
-
-	inline SafetyHookMid reset_hook;
-	inline SafetyHookMid sum_hook;
 	inline SafetyHookMid random_table_hook;
 
 	void Install();

@@ -12,21 +12,21 @@
 
 void Setup(HMODULE hModule)
 {
+    gui::Setup();
+
+    while (!LR2::isInit) Sleep(1);
+    
     try {
-        gui::Setup();
         dx9::Setup();
     }
     catch (const std::exception& error) {
         MessageBox(0, error.what(), "Error Occured", MB_OK | MB_ICONEXCLAMATION);
         goto cleanup;
     }
-
     config::LoadConfig();
     hooks::Setup();
 
     while (!GetAsyncKeyState(VK_END)) {
-
-
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 
