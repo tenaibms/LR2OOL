@@ -2,7 +2,7 @@
 
 #include <algorithm>
 #include "srcnumber.h"
-#include "updategamestate.h"
+#include "hooks/gamestate.h"
 #include "hooks/hooks.h"
 #include "hooks/loadbms.h"
 #include <LR2Bindings.hpp>
@@ -33,14 +33,14 @@ int SrcNumber::OnSrcNumber(uintptr_t* data_ptr, int id)
 
     int pgreat_count{}, great_count{}, good_count{}, bad_count{}, poor_count{};
 
-    if (hooks::updategamestate::gamestate == hooks::updategamestate::GAMESTATE::playing || hooks::updategamestate::gamestate == hooks::updategamestate::GAMESTATE::result) {
+    if (hooks::game_state.m_current_state == GameState::StateList::playing || hooks::game_state.m_current_state == GameState::StateList::result) {
         pgreat_count = LR2::pGame->gameplay.player[0].judgecount[5];
         great_count = LR2::pGame->gameplay.player[0].judgecount[4];
         good_count = LR2::pGame->gameplay.player[0].judgecount[3];
         bad_count = LR2::pGame->gameplay.player[0].judgecount[2];
         poor_count = LR2::pGame->gameplay.player[0].judgecount[1] + LR2::pGame->gameplay.player[0].judgecount[0];;
     }
-    else if (hooks::updategamestate::gamestate == hooks::updategamestate::GAMESTATE::select) {
+    else if (hooks::game_state.m_current_state == GameState::StateList::select) {
         pgreat_count = LR2::pGame->sSelect.bmsList[LR2::pGame->sSelect.cur_song].mybest.stat_pgreat;
         great_count = LR2::pGame->sSelect.bmsList[LR2::pGame->sSelect.cur_song].mybest.stat_great;
         good_count = LR2::pGame->sSelect.bmsList[LR2::pGame->sSelect.cur_song].mybest.stat_good;

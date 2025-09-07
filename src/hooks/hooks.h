@@ -4,6 +4,9 @@
 #include "hooks/srcnumber.h"
 #include "hooks/mirror.h"
 #include "hooks/skinmisc.h"
+#include "hooks/cursor.h"
+#include "hooks/gamestate.h"
+#include "hooks/input.h"
 
 namespace hooks {
     void Setup();
@@ -15,4 +18,7 @@ namespace hooks {
     inline GreenNumber green_number;
     inline Mirror mirror;
     inline SkinMisc skin_misc;
+    inline Cursor cursor;
+    inline GameState game_state;
+    inline Input input;
 }

@@ -22,15 +22,8 @@ double GreenNumber::GetGreenNumber(int hsfix, int player)
 		LR2::pGame->gameplay.BPM
 	};
 
-	/* max, min, avg, constant */
-	double bpm_chart[] = {
-		LR2::pGame->gameplay.maxBPM,
-		LR2::pGame->gameplay.minBPM,
-		loadbms::sum / loadbms::count,
-		LR2::pGame->gameplay.BPM
-	};
-
-	hispeed *= bpm_chart[hsfix] / bpm_chart[LR2::pGame->config.play.hsfix + 1];
+	if(LR2::pGame->config.play.hsfix != 4) /* constant */
+		hispeed *= bpm_user[hsfix] * LR2::pGame->gameplay.speedmultiplier / 150.0;
 
 	return ((2173.f / 725.f) * 10000.f) * ((line_h + line_y + adjust_x + adjust_y) / (hispeed * basespeed)) * (1 - (cover / 100.f));
 }

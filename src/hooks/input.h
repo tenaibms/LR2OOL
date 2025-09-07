@@ -2,13 +2,14 @@
 #include <cstdint>
 #include <safetyhook.hpp>
 
-namespace input {
+class Input {
+public:
+	Input();
+private:
 	struct {
 		const uintptr_t get_mouse_input = 0x5392C0;
-	} offsets;
-
-	inline SafetyHookInline get_mouse_input_hook;
-	uint8_t GetMouseInput();
-	void Install();
+	} m_offsets;
+	SafetyHookInline m_on_get_mouse_input_hook;
+	static uint8_t OnGetMouseInput();
 };
 

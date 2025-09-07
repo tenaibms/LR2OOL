@@ -1,7 +1,7 @@
 #include "skinmisc.h"
 #include "hooks/hooks.h"
 #include "features/greennumber.h"
-#include "hooks/updategamestate.h"
+#include "hooks/gamestate.h"
 #include <LR2Bindings.hpp>
 #include <LR2Typedefs.hpp>
 
@@ -20,7 +20,7 @@ void SkinMisc::OnSliderCmp(safetyhook::Context& ctx)
 	int case_num = ctx.ecx + 1;
 	LR2::skstruct* sk = &LR2::pGame->skstruct;
 
-	if (hooks::updategamestate::gamestate == hooks::updategamestate::GAMESTATE::playing) {
+	if (hooks::game_state.m_current_state == GameState::StateList::playing) {
 		hooks::skin_misc.m_lift_number_p1 = hooks::src_number.m_green_number.GetLiftNumber(1);
 		hooks::skin_misc.m_lift_number_p2 = hooks::src_number.m_green_number.GetLiftNumber(2);
 	}

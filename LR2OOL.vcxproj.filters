@@ -48,7 +48,7 @@
     <ClCompile Include="src\hooks\mirror.cpp" />
     <ClCompile Include="src\hooks\cursor.cpp" />
     <ClCompile Include="src\hooks\replayfix.cpp" />
-    <ClCompile Include="src\hooks\updategamestate.cpp" />
+    <ClCompile Include="src\hooks\gamestate.cpp" />
     <ClCompile Include="src\hooks\judgement.cpp" />
     <ClCompile Include="src\features\hiterror.cpp" />
     <ClCompile Include="src\features\greennumber.cpp" />
@@ -91,7 +91,7 @@
     <ClInclude Include="src\hooks\mirror.h" />
     <ClInclude Include="src\hooks\cursor.h" />
     <ClInclude Include="src\hooks\replayfix.h" />
-    <ClInclude Include="src\hooks\updategamestate.h" />
+    <ClInclude Include="src\hooks\gamestate.h" />
     <ClInclude Include="src\hooks\judgement.h" />
     <ClInclude Include="src\features\hiterror.h" />
     <ClInclude Include="src\features\greennumber.h" />

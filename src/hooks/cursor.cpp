@@ -1,14 +1,17 @@
 #include "cursor.h"
+#include "hooks/hooks.h"
 #include "overlay/overlay.h"
 
-int __cdecl hooks::cursor::ShowCursor(int enabled)
+Cursor::Cursor()
 {
-    if (overlay::open)
-        return cursor_hook.call<int>(1);
-    return cursor_hook.call<int>(enabled);
+    m_cursor_hook = safetyhook::create_inline(reinterpret_cast<void*>(m_offsets.show_cursor), reinterpret_cast<void*>(ShowCursor));
 }
 
-void hooks::cursor::Install()
+int __cdecl Cursor::ShowCursor(int enabled) 
 {
-    cursor_hook = safetyhook::create_inline(reinterpret_cast<void*>(offsets::show_cursor), reinterpret_cast<void*>(ShowCursor));
+    Cursor& cursor = hooks::cursor;
+
+    if (overlay::open)
+        return cursor.m_cursor_hook.call<int>(1);
+    return cursor.m_cursor_hook.call<int>(enabled);
 }

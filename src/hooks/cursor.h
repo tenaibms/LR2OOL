@@ -1,13 +1,15 @@
 #pragma once
 #include <safetyhook.hpp>
 
-namespace hooks::cursor {
-	namespace offsets {
-		const inline uintptr_t show_cursor = 0x4D09E0;
-	}
+class Cursor {
+public:
+	Cursor();
 
-	inline SafetyHookInline cursor_hook;
-	int __cdecl ShowCursor(int enabled);
+private:
+	struct {
+		const uintptr_t show_cursor = 0x4D09E0;
+	} m_offsets;
 
-	void Install();
-}
+	SafetyHookInline m_cursor_hook;
+	static int __cdecl ShowCursor(int enabled);
+};
