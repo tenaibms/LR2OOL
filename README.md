@@ -1,5 +1,6 @@
 # LR2OOL
 [![MSBuild](https://github.com/tenaibms/LR2OOL/actions/workflows/msbuild.yml/badge.svg)](https://github.com/tenaibms/LR2OOL/actions/workflows/msbuild.yml)
+![Line of code](https://raw.githubusercontent.com/shadowmoose/GHA-LoC-Badge/image-data/badge.svg)
 
 ## Outline
 This tool adds basic some quality of life to LR2. Including:
