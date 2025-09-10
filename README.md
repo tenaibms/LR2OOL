@@ -18,7 +18,8 @@ The version of the game you inject it into must contain the F/S patch.
 
 ## Usage
 
-By default, press `insert` to open the menu.
+By default, press `<Insert>` to open the menu. This can be changed to whatever you wish.
+To uninject the mod, press `<End>`. This currently cannot be changed.
 
 ### Additional SRC_NUMBER Indexes
 | Index | Value                                  |
@@ -61,3 +62,6 @@ By default, press `insert` to open the menu.
 | 426   | Total time (seconds)                   |
 | 427   | Total time (minutes)                   |
 | 428   | Total time (hours)                     |
+| 429   | Self rate (decimal)                    |
+| 430   | Rival rate (decimal)                   |
+
