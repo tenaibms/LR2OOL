@@ -7,9 +7,9 @@ name: MSBuild
 
 on:
   push:
-    branches: [ "class-refactor" ]
+    branches: [ "master" ]
   pull_request:
-    branches: [ "class-refactor" ]
+    branches: [ "master" ]
 
 env:
   # Path to the solution file relative to the root of the project.
