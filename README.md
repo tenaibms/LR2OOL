@@ -22,6 +22,8 @@ The version of the game you inject it into must contain the F/S patch.
 By default, press `<Insert>` to open the menu. This can be changed to whatever you wish.
 To uninject the mod, press `<End>`. This currently cannot be changed.
 
+To save your config, you can either press the button `Save Config` or close the game, as the config will save automatically as well.
+
 ### Additional SRC_NUMBER Indexes
 | Index | Value                                  |
 |-------|----------------------------------------|
