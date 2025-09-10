@@ -33,7 +33,7 @@ namespace statistics {
         ~Ema() = default;
 
         void Reset();
-        void Insert(float value);
+        void Insert(int value);
 
         float ema;
         float alpha = 0.07f;

@@ -57,7 +57,7 @@ void statistics::Ema::Reset()
 	ema = 0;
 }
 
-void statistics::Ema::Insert(float value)
+void statistics::Ema::Insert(int value)
 {
 	ema = ema + (alpha * (value - ema));
 }

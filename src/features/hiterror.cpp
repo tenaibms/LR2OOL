@@ -48,13 +48,13 @@ void hiterror::Render()
                 ImU32 color = IM_COL32(255, 255, 255, 255);
 
                 switch(buffer[i].judgement) {
-                case JUDGEMENT::pgreat:
+                case Judgement::PGREAT:
                     color = overlay::ReplaceAlpha(colors::pgreat, buffer[i].opacity);
                     break;
-                case JUDGEMENT::great:
+                case Judgement::GREAT:
                     color = overlay::ReplaceAlpha(colors::great, buffer[i].opacity);
                     break;
-                case JUDGEMENT::good:
+                case Judgement::GOOD:
                     color = overlay::ReplaceAlpha(colors::good, buffer[i].opacity);
                     break;
                 default:
@@ -88,7 +88,7 @@ void hiterror::Reset()
     ema.Reset();
 }
 
-void hiterror::InsertBuffer(int delta, JUDGEMENT judgement)
+void hiterror::InsertBuffer(int delta, Judgement judgement)
 {
     buffer[buffer_current % lines] = note_delta{ delta, judgement, 255.0f };
     ++buffer_current;
@@ -97,6 +97,6 @@ void hiterror::InsertBuffer(int delta, JUDGEMENT judgement)
 void hiterror::ClearBuffer()
 {
     for (int i = 0; i < BUFFER_MAX_SIZE; ++i) {
-        buffer[i] = { 0, JUDGEMENT::pgreat, 0.f };
+        buffer[i] = { 0, Judgement::PGREAT, 0.f };
     }
 }

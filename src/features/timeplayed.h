@@ -8,5 +8,8 @@ public:
 	/* realistically, no one is going to run lr2 for more than INT_MAX seconds... */
 	Timer();
 	~Timer() = default;
-	int GetTime();
+	inline int GetTime();
+	int GetSeconds();
+	int GetMinutes();
+	int GetHours();
 };

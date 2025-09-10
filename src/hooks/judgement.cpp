@@ -2,36 +2,50 @@
 #include "features/hiterror.h"
 #include "hooks/srcnumber.h"
 
-int __cdecl hooks::judgement::OnJudgement(int a1, int a2, int a3, int a4, int a5, char a6)
+JudgementProcessing::JudgementProcessing()
 {
-    // todo: clean this up
-    int result = judge_hook.ccall<int>(a1, a2, a3, a4, a5, a6);
-    JUDGEMENT judgement = static_cast<JUDGEMENT>(a1);
+    m_process_note_single_hook = safetyhook::create_inline((void*)(m_offsets.process_note_single), OnProcessNoteSingle);
 
-    /* we don't handle miss poors */
-    if (judgement == JUDGEMENT::miss_poor)
-        return result;
+    m_mid_hooks.push_back(safetyhook::create_mid((void*)m_offsets.store_note_time, OnStoreNoteTime));
+    
+    /* single note hooks */
+    m_mid_hooks.push_back(safetyhook::create_mid((void*)m_offsets.judge_to_score_single.pgreat, OnCallJudgeToScore));
+    m_mid_hooks.push_back(safetyhook::create_mid((void*)m_offsets.judge_to_score_single.great, OnCallJudgeToScore));
+    m_mid_hooks.push_back(safetyhook::create_mid((void*)m_offsets.judge_to_score_single.good, OnCallJudgeToScore));
+    m_mid_hooks.push_back(safetyhook::create_mid((void*)m_offsets.judge_to_score_single.bad, OnCallJudgeToScore));
+    m_mid_hooks.push_back(safetyhook::create_mid((void*)m_offsets.judge_to_score_single.empty_poor, OnCallJudgeToScore));
 
-    int hit_timing = *reinterpret_cast<int*>(0x127300);
-    int note_timing = *reinterpret_cast<int*>(0x127304);
-    /* order is important here, as this makes early hits negative, as is convention */
-    int judgement_delta = (hit_timing - note_timing);
+    /* long note hooks */
 
-    /* empty poors should not affect timing metrics */
-    if (judgement != JUDGEMENT::empty_poor) {
-        hiterror::ema.Insert(judgement_delta);
-        srcnumber::mean.Insert(judgement_delta);
-        srcnumber::stddev.Insert(judgement_delta);
-    }
-
-    /* they should still be shown in the hit error bar however */
-    hiterror::InsertBuffer(std::clamp(judgement_delta, -255, 255), judgement);
-
-    return result;
 }
 
-
-void hooks::judgement::Install()
+int __cdecl JudgementProcessing::OnProcessNoteSingle(void* g, int lane, int keypress, int timing, int player)
 {
-	judge_hook = safetyhook::create_inline(reinterpret_cast<void*>(offsets::update_judge_data), reinterpret_cast<void*>(OnJudgement));
+    JudgementProcessing& t = hooks::judgement_processing;
+    
+    t.m_current_time = timing;
+    return t.m_process_note_single_hook.ccall<int>(g, lane, keypress, timing, player);
+}
+
+void JudgementProcessing::OnCallJudgeToScore(SafetyHookContext& ctx)
+{
+    JudgementProcessing& t = hooks::judgement_processing;
+    
+    Judgement judgement = *(Judgement*)(ctx.esp);
+    int judgement_delta = t.m_current_time - t.m_note_time;
+
+    if (judgement != Judgement::EMPTY_POOR) {
+        hiterror::ema.Insert(judgement_delta);
+        hooks::src_number.m_mean.Insert(judgement_delta);
+        hooks::src_number.m_stddev.Insert(judgement_delta);
+    }
+
+    hiterror::InsertBuffer(judgement_delta, judgement);
+}
+
+void JudgementProcessing::OnStoreNoteTime(SafetyHookContext& ctx)
+{
+    JudgementProcessing& t = hooks::judgement_processing;
+
+    t.m_note_time = ctx.eax;
 }

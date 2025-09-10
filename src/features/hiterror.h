@@ -35,7 +35,7 @@ namespace hiterror {
     #define BUFFER_MAX_SIZE 128
     struct note_delta {
         int delta;
-        JUDGEMENT judgement;
+        Judgement judgement;
         float opacity;
     };
 
@@ -48,7 +48,7 @@ namespace hiterror {
 
     void Render();
 
-    void InsertBuffer(int delta, JUDGEMENT judgement);
+    void InsertBuffer(int delta, Judgement judgement);
     void ClearBuffer();
 
     void Reset();

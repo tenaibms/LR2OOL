@@ -1,19 +1,27 @@
 #pragma once
 #include <safetyhook.hpp>
 
-namespace hooks::mirror {
-    namespace offsets {
-        const inline uintptr_t mirror = 0x433A5A;
-        const inline uintptr_t reset = 0x433A61;
-        const inline uintptr_t current_opt = 0x0FF848;
-    }
+class Mirror {
+public:
+    Mirror();
 
-    /* data pointers */
-    inline int current_opt = *reinterpret_cast<int*>(offsets::current_opt);
+    bool m_enabled = false;
 
-    inline bool enabled = false;
-    inline SafetyHookMid mirror_hook;
-    inline SafetyHookMid reset_hook;
+private:
+    struct {
+        const uintptr_t random_p1 = 0x433A5A;
+        const uintptr_t random_p2 = 0x433A61;
+        const uintptr_t reset_1 = 0x433A68;
+        const uintptr_t dp_flip = 0x433B09;
+        const uintptr_t reset_2 = 0x433B10;
+    } m_offsets;
 
-    void Install();
-}
+    static bool IsSPMirror();
+    static bool IsDPMirror();
+
+    SafetyHookMid m_random_p1_hook;
+    SafetyHookMid m_random_p2_hook;
+    SafetyHookMid reset_1_hook;
+    SafetyHookMid dp_flip_hook;
+    SafetyHookMid reset_2_hook;
+};

@@ -1,5 +1,26 @@
 #pragma once
 #include <imgui_internal.h>
+#include <string>
+#include "graphics/gui.h"
+#include "Windows.h"
+
+class HotkeyWidget {
+private:
+    const char* m_label;
+    bool m_awaiting_keypress;
+    unsigned int& m_keycode;
+    char m_key_name_buffer[256];
+    std::string m_display_str;
+
+    void ReadKey();
+public:
+    void Render();
+    HotkeyWidget(const char* label, unsigned int& keycode) : m_label(label), m_keycode(keycode), m_awaiting_keypress(false) {
+        FormatString();
+    }
+    const char* GetKeyNameBuffer();
+    void FormatString(); /* this needs to be public until overlay becomes a class */
+};
 
 namespace overlay {
     /* popup */
@@ -11,7 +32,10 @@ namespace overlay {
 
     /* show windows */
     inline bool open = false;
-    inline bool keybinds_open = false;
+
+    /* keybind stuff */
+    inline HotkeyWidget open_widget = HotkeyWidget("Open Menu", gui::menu_keybind);
+
 
     /* helper functions */
     float FadeOut(float current_opacity, float max_opacity, float min_opacity, float fade_time, float delta_time);

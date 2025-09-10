@@ -9,6 +9,8 @@ namespace gui {
         const inline uintptr_t internal_resolution = 0x7A3B50;
     }
 
+    inline unsigned menu_keybind = VK_INSERT;
+
     // is menu ready to be shown?
     inline bool setup = false;
 
