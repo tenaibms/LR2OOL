@@ -30,9 +30,6 @@
     <ClCompile Include="src\overlay\overlay.cpp">
       <Filter>Source Files\overlay</Filter>
     </ClCompile>
-    <ClCompile Include="src\hooks\hooks.cpp">
-      <Filter>Source Files\hooks</Filter>
-    </ClCompile>
     <ClCompile Include="src\utils\statistics.cpp">
       <Filter>Source Files\utils</Filter>
     </ClCompile>
@@ -52,7 +49,7 @@
     <ClCompile Include="src\hooks\judgement.cpp" />
     <ClCompile Include="src\features\hiterror.cpp" />
     <ClCompile Include="src\features\greennumber.cpp" />
-    <ClCompile Include="src\hooks\loadbms.cpp" />
+    <ClCompile Include="src\hooks\random.cpp" />
     <ClCompile Include="src\hooks\input.cpp" />
     <ClCompile Include="src\features\timeplayed.cpp" />
     <ClCompile Include="src\features\totaltime.cpp" />
@@ -95,7 +92,7 @@
     <ClInclude Include="src\hooks\judgement.h" />
     <ClInclude Include="src\features\hiterror.h" />
     <ClInclude Include="src\features\greennumber.h" />
-    <ClInclude Include="src\hooks\loadbms.h" />
+    <ClInclude Include="src\hooks\random.h" />
     <ClInclude Include="src\hooks\input.h" />
     <ClInclude Include="src\features\timeplayed.h" />
     <ClInclude Include="include\FMODex\fmod.h" />

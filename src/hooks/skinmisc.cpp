@@ -20,7 +20,7 @@ void SkinMisc::OnSliderCmp(safetyhook::Context& ctx)
 	int case_num = ctx.ecx + 1;
 	LR2::skstruct* sk = &LR2::pGame->skstruct;
 
-	if (hooks::game_state.m_current_state == GameState::StateList::playing) {
+	if (hooks::game_state.m_current_state == Gamestate::StateList::playing) {
 		hooks::skin_misc.m_lift_number_p1 = hooks::src_number.m_green_number.GetLiftNumber(1);
 		hooks::skin_misc.m_lift_number_p2 = hooks::src_number.m_green_number.GetLiftNumber(2);
 	}
@@ -45,7 +45,7 @@ int SkinMisc::OnDrawNum(LR2::DrawingBuf* drb, LR2::SRCstruct* src, LR2::DSTstruc
 	return hooks::skin_misc.m_draw_num_hook.call<int>(drb, src, dst, T, number, x, y);
 }
 
-SkinMisc::SkinMisc()
+void SkinMisc::Init()
 {
 	m_draw_ln_hook = safetyhook::create_mid(m_offsets.draw_ln, OnDrawLN);
 	m_slider_hook = safetyhook::create_mid(m_offsets.cmp, OnSliderCmp);

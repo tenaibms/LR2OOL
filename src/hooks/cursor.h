@@ -3,8 +3,8 @@
 
 class Cursor {
 public:
-	Cursor();
-
+	Cursor() = default;
+	void Init();
 private:
 	struct {
 		const uintptr_t show_cursor = 0x4D09E0;

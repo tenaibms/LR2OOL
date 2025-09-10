@@ -1,5 +1,4 @@
 #include "greennumber.h"
-#include "hooks/loadbms.h"
 #include <LR2Bindings.hpp>
 
 double GreenNumber::GetGreenNumber(int hsfix, int player)

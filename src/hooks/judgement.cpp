@@ -2,7 +2,7 @@
 #include "features/hiterror.h"
 #include "hooks/srcnumber.h"
 
-JudgementProcessing::JudgementProcessing()
+void JudgementProcessing::Init()
 {
     m_process_note_single_hook = safetyhook::create_inline((void*)(m_offsets.process_note_single), OnProcessNoteSingle);
 
@@ -16,7 +16,6 @@ JudgementProcessing::JudgementProcessing()
     m_mid_hooks.push_back(safetyhook::create_mid((void*)m_offsets.judge_to_score_single.empty_poor, OnCallJudgeToScore));
 
     /* long note hooks */
-
 }
 
 int __cdecl JudgementProcessing::OnProcessNoteSingle(void* g, int lane, int keypress, int timing, int player)

@@ -4,7 +4,6 @@
 #include "srcnumber.h"
 #include "hooks/gamestate.h"
 #include "hooks/hooks.h"
-#include "hooks/loadbms.h"
 #include <LR2Bindings.hpp>
 
 int SrcNumber::GetWhole(double num)
@@ -33,14 +32,14 @@ int SrcNumber::OnSrcNumber(uintptr_t* data_ptr, int id)
 
     int pgreat_count{}, great_count{}, good_count{}, bad_count{}, poor_count{};
 
-    if (hooks::game_state.m_current_state == GameState::StateList::playing || hooks::game_state.m_current_state == GameState::StateList::result) {
+    if (hooks::game_state.m_current_state == Gamestate::StateList::playing || hooks::game_state.m_current_state == Gamestate::StateList::result) {
         pgreat_count = LR2::pGame->gameplay.player[0].judgecount[5];
         great_count = LR2::pGame->gameplay.player[0].judgecount[4];
         good_count = LR2::pGame->gameplay.player[0].judgecount[3];
         bad_count = LR2::pGame->gameplay.player[0].judgecount[2];
         poor_count = LR2::pGame->gameplay.player[0].judgecount[1] + LR2::pGame->gameplay.player[0].judgecount[0];;
     }
-    else if (hooks::game_state.m_current_state == GameState::StateList::select) {
+    else if (hooks::game_state.m_current_state == Gamestate::StateList::select) {
         pgreat_count = LR2::pGame->sSelect.bmsList[LR2::pGame->sSelect.cur_song].mybest.stat_pgreat;
         great_count = LR2::pGame->sSelect.bmsList[LR2::pGame->sSelect.cur_song].mybest.stat_great;
         good_count = LR2::pGame->sSelect.bmsList[LR2::pGame->sSelect.cur_song].mybest.stat_good;
@@ -60,7 +59,7 @@ int SrcNumber::OnSrcNumber(uintptr_t* data_ptr, int id)
     double poor_percent = GetPercentage(poor_count, sum);
 
     switch (id) {
-    case 295: return loadbms::random_1p; /* 1p current random */
+    case 295: return hooks::random.random_1p; /* 1p current random */
     case 296: return GetWhole(t.m_mean.GetMean()); /* whole part of mean */
     case 297: return GetDecimal(t.m_mean.GetMean(), 2); /* decimal part of mean */
     case 298: return GetWhole(t.m_stddev.GetPopulationStandardDeviation()); /* whole part of stddev */
@@ -87,7 +86,7 @@ int SrcNumber::OnSrcNumber(uintptr_t* data_ptr, int id)
     case 415: return GetDecimal(t.m_green_number.GetWhiteNumber(1), 2); /* decimal part of white number */
     case 416: return GetWhole(t.m_green_number.GetLiftNumber(1)); /* whole part of lift number */
     case 417: return GetDecimal(t.m_green_number.GetLiftNumber(1), 2); /* decimal part of lift number */
-    case 418: return loadbms::random_2p; /* 2p random */
+    case 418: return hooks::random.random_2p; /* 2p random */
     case 419: return GetWhole(LR2::pGame->gameplay.player[0].HP); /* Custom gauge whole */
     case 420: return GetDecimal(LR2::pGame->gameplay.player[0].HP, 1); /* custom gauge decimal 1 place */
     case 421: return GetDecimal(LR2::pGame->gameplay.player[0].HP, 2); /* custom gauge decimal 2 places */
@@ -115,7 +114,7 @@ int SrcNumber::OnSrcNumber(uintptr_t* data_ptr, int id)
     }
 }
 
-SrcNumber::SrcNumber()
+void SrcNumber::Init()
 {
     m_src_number_hook = safetyhook::create_inline(reinterpret_cast<void*>(m_offsets.src_number), reinterpret_cast<void*>(OnSrcNumber));
 }

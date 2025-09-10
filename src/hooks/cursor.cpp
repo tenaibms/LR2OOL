@@ -2,8 +2,7 @@
 #include "hooks/hooks.h"
 #include "overlay/overlay.h"
 
-Cursor::Cursor()
-{
+void Cursor::Init() {
     m_cursor_hook = safetyhook::create_inline(reinterpret_cast<void*>(m_offsets.show_cursor), reinterpret_cast<void*>(ShowCursor));
 }
 

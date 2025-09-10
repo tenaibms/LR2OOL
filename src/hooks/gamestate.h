@@ -1,9 +1,10 @@
 #pragma once
 #include <safetyhook.hpp>
 
-class GameState {
+class Gamestate {
 public:
-	GameState();
+	Gamestate() = default;
+	void Init();
 
 	enum class StateList {
 		select = 2,

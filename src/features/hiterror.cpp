@@ -7,7 +7,7 @@
 
 void hiterror::Render()
 {
-    if ((hooks::game_state.m_current_state == GameState::StateList::playing || (hiterror::open_config && overlay::open)) && hiterror::enabled) {
+    if ((hooks::game_state.m_current_state == Gamestate::StateList::playing || (hiterror::open_config && overlay::open)) && hiterror::enabled) {
         ImGui::SetNextWindowBgAlpha(0.35f);
         ImGui::SetNextWindowSize(ImVec2{ (float)width, (float)height });
 

@@ -2,19 +2,19 @@
 #include "hooks/hooks.h"
 #include "LR2Bindings.hpp"
 
-Mirror::Mirror()
+void Mirror::Init()
 {
     m_random_p1_hook = safetyhook::create_mid(reinterpret_cast<void*>(m_offsets.random_p1), [](safetyhook::Context& ctx) {
         if (hooks::mirror.m_enabled) ctx.ebx = IsSPMirror() || IsDPMirror();
-    });
+        });
 
     m_random_p2_hook = safetyhook::create_mid(reinterpret_cast<void*>(m_offsets.random_p2), [](safetyhook::Context& ctx) {
         if (hooks::mirror.m_enabled) ctx.ebx = IsDPMirror();
-    });
-    
+        });
+
     dp_flip_hook = safetyhook::create_mid(reinterpret_cast<void*>(m_offsets.dp_flip), [](safetyhook::Context& ctx) {
         if (hooks::mirror.m_enabled) ctx.ebx = IsDPMirror();
-    });
+        });
 
     reset_1_hook = safetyhook::create_mid(reinterpret_cast<void*>(m_offsets.reset_1), [](safetyhook::Context& ctx) { ctx.ebx = 0; });
     reset_2_hook = safetyhook::create_mid(reinterpret_cast<void*>(m_offsets.reset_2), [](safetyhook::Context& ctx) { ctx.ebx = 0; });

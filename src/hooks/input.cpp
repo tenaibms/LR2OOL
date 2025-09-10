@@ -3,7 +3,7 @@
 #include "hooks/hooks.h"
 #include <imgui.h>
 
-Input::Input()
+void Input::Init()
 {
 	m_on_get_mouse_input_hook = safetyhook::create_inline(reinterpret_cast<void*>(m_offsets.get_mouse_input), reinterpret_cast<void*>(OnGetMouseInput));
 }

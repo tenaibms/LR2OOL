@@ -3,6 +3,17 @@
 #include <LR2Typedefs.hpp>
 
 class SkinMisc {
+public:
+	SkinMisc() = default;
+	void Init();
+
+	int m_lift_number_p1 = 0; /* these must exist since SliderByTime() requires a pointer to the value instead of just the value */
+	int m_lift_number_p2 = 0;
+
+	bool m_fs = false;
+	bool m_pacemaker = false;
+
+	SafetyHookInline m_draw_num_hook;
 private:
 	struct {
 		const uintptr_t draw_ln = 0x407A83;
@@ -16,15 +27,4 @@ private:
 
 	SafetyHookMid m_draw_ln_hook;
 	SafetyHookMid m_slider_hook;
-	
-public:
-	int m_lift_number_p1 = 0; /* these must exist since SliderByTime() requires a pointer to the value instead of just the value */
-	int m_lift_number_p2 = 0;
-
-	bool m_fs = false;
-	bool m_pacemaker = false;
-
-	SafetyHookInline m_draw_num_hook;
-
-	SkinMisc();
 };

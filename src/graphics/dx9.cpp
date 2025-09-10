@@ -44,11 +44,11 @@ HRESULT __stdcall dx9::hook_reset(IDirect3DDevice9* device, D3DPRESENT_PARAMETER
 void dx9::Setup()
 {
     end_scene_hook = safetyhook::create_inline(VirtualFunction(gui::dummyDevice, 42), reinterpret_cast<void*>(hook_end_scene));
-    reset_hook = safetyhook::create_inline(VirtualFunction(gui::dummyDevice, 16), reinterpret_cast<void*>(hook_reset));
+    //reset_hook = safetyhook::create_inline(VirtualFunction(gui::dummyDevice, 16), reinterpret_cast<void*>(hook_reset));
 }
 
 void dx9::Destroy() noexcept
 {
     end_scene_hook = {};
-    reset_hook = {};
+    //reset_hook = {};
 }

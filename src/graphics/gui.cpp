@@ -192,6 +192,8 @@ void gui::SetupMenu(LPDIRECT3DDEVICE9 device) noexcept
 
 void gui::Destroy()
 {
+    gui::setup = false;
+
     ImGui_ImplDX9_Shutdown();
     ImGui_ImplWin32_Shutdown();
     ImGui::DestroyContext();

@@ -2,14 +2,14 @@
 #include "features/hiterror.h"
 #include "hooks/srcnumber.h"
 
-GameState::GameState()
+void Gamestate::Init()
 {
     m_mid_hooks.push_back(safetyhook::create_mid(m_offsets.change_gamestate, OnGameStateChange));
 }
 
-void GameState::OnGameStateChange(safetyhook::Context& ctx)
+void Gamestate::OnGameStateChange(safetyhook::Context& ctx)
 {
-    GameState& game_state = hooks::game_state;
+    Gamestate& game_state = hooks::game_state;
 
     game_state.m_current_state = static_cast<StateList>(ctx.eax);
     if (ctx.eax == 13) game_state.m_current_state = StateList::result;

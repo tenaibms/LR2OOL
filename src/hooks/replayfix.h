@@ -3,11 +3,12 @@
 
 class ReplayFix {
 public:
-	ReplayFix();
+	ReplayFix() = default;
+	void Init();
 
 	bool m_enabled = false;
 
-	SafetyHookInline save_replay_hook;
+	SafetyHookInline m_save_replay_hook;
 private:
 	struct {
 		const uintptr_t save_replay = 0x4C09E0;

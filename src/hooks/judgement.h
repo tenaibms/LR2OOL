@@ -11,6 +11,9 @@ enum class Judgement {
 };
 
 class JudgementProcessing {
+public:
+	JudgementProcessing() = default;
+	void Init();
 private:
 	struct {
 		const uintptr_t process_note_single = 0x418850;
@@ -33,6 +36,4 @@ private:
 	static int __cdecl OnProcessNoteSingle(void* g, int lane, int keypress, int timing, int player);
 	static void OnCallJudgeToScore(SafetyHookContext& ctx);
 	static void OnStoreNoteTime(SafetyHookContext& ctx);
-public:
-	JudgementProcessing();
 };

@@ -7,11 +7,9 @@
 #include "hooks/cursor.h"
 #include "hooks/gamestate.h"
 #include "hooks/input.h"
+#include "hooks/random.h"
 
 namespace hooks {
-    void Setup();
-    void Destroy();
-
     inline ReplayFix replay_fix;
     inline SrcNumber src_number;
     inline JudgementProcessing judgement_processing;
@@ -19,6 +17,7 @@ namespace hooks {
     inline Mirror mirror;
     inline SkinMisc skin_misc;
     inline Cursor cursor;
-    inline GameState game_state;
+    inline Gamestate game_state;
     inline Input input;
+    inline Random random;
 }

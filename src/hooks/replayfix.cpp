@@ -4,9 +4,10 @@
 
 #include <LR2Bindings.hpp>
 
-ReplayFix::ReplayFix()
+void ReplayFix::Init()
 {
-    save_replay_hook = safetyhook::create_inline(reinterpret_cast<void*>(m_offsets.save_replay), reinterpret_cast<void*>(OnSaveReplay));
+    m_save_replay_hook = safetyhook::create_inline(reinterpret_cast<void*>(m_offsets.save_replay), reinterpret_cast<void*>(OnSaveReplay));
+
 }
 
 int __cdecl ReplayFix::OnSaveReplay(uint32_t* replay, void* song_md5, void* ArgList)
@@ -18,5 +19,5 @@ int __cdecl ReplayFix::OnSaveReplay(uint32_t* replay, void* song_md5, void* ArgL
     if (replay_fix.m_enabled) {
         *replay_gauge = *current_gauge;
     }
-    return replay_fix.save_replay_hook.ccall<int>(replay, song_md5, ArgList);
+    return replay_fix.m_save_replay_hook.ccall<int>(replay, song_md5, ArgList);
 }

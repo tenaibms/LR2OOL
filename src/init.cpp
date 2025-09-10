@@ -22,16 +22,15 @@ void Setup(HMODULE hModule)
         goto cleanup;
     }
     config::LoadConfig();
-    hooks::Setup();
 
     while (!GetAsyncKeyState(VK_END)) {
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 
 cleanup:
+    config::SaveConfig();
     dx9::Destroy();
     gui::Destroy();
-    hooks::Destroy();
 
     FreeLibraryAndExitThread(hModule, 0);
 }
@@ -42,6 +41,18 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReser
     {
     case DLL_PROCESS_ATTACH: {
         LR2::Init();
+
+        using namespace hooks;
+
+        replay_fix.Init();
+        src_number.Init();
+        judgement_processing.Init();
+        mirror.Init();
+        skin_misc.Init();
+        cursor.Init();
+        game_state.Init();
+        input.Init();
+        random.Init();
 
         const HANDLE thread = CreateThread(
             NULL,

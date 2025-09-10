@@ -3,7 +3,8 @@
 
 class Mirror {
 public:
-    Mirror();
+    Mirror() = default;
+    void Init();
 
     bool m_enabled = false;
 
@@ -19,6 +20,7 @@ private:
     static bool IsSPMirror();
     static bool IsDPMirror();
 
+    /* todo, convert to vector */
     SafetyHookMid m_random_p1_hook;
     SafetyHookMid m_random_p2_hook;
     SafetyHookMid reset_1_hook;
