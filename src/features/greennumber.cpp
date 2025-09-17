@@ -29,7 +29,7 @@ double GreenNumber::GetGreenNumber(int hsfix, int player)
 
 double GreenNumber::GetWhiteNumber(int player)
 {
-	return (player == 1 ? LR2::pGame->config.play.p1_lanecover : LR2::pGame->config.play.p2_lanecover) * 10;
+	return (player == 1 ? LR2::pGame->config.play.p1_lanecoverv : LR2::pGame->config.play.p2_lanecoverv) * 10;
 }
 
 double GreenNumber::GetLiftNumber(int player)

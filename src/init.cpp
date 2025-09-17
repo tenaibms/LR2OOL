@@ -10,7 +10,9 @@
 #include "config/config.h"
 #include "features/hiterror.h"
 
-void Setup(HMODULE hModule)
+#include <thread>
+
+void Init()
 {
     try {
         gui::Setup();
@@ -23,7 +25,7 @@ void Setup(HMODULE hModule)
     }
     config::LoadConfig();
 
-    while (!GetAsyncKeyState(VK_END)) {
+    while (!GetAsyncKeyState(VK_END) || !GetAsyncKeyState(VK_ESCAPE)) {
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 
@@ -31,8 +33,6 @@ cleanup:
     config::SaveConfig();
     dx9::Destroy();
     gui::Destroy();
-
-    FreeLibraryAndExitThread(hModule, 0);
 }
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved)
@@ -54,17 +54,8 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReser
         input.Init();
         random.Init();
 
-        const HANDLE thread = CreateThread(
-            NULL,
-            0,
-            reinterpret_cast<LPTHREAD_START_ROUTINE>(Setup),
-            hModule,
-            NULL,
-            NULL
-        );
+        std::thread(Init).detach();
 
-        if (thread)
-            CloseHandle(thread);
         break;
     }
     case DLL_THREAD_ATTACH:

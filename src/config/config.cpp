@@ -45,6 +45,7 @@ void config::LoadConfig()
 
         READ_BOOL("skin_tweaks", "fs", hooks::skin_misc.m_fs);
         READ_BOOL("skin_tweaks", "pacemaker", hooks::skin_misc.m_pacemaker);
+        READ_BOOL("skin_tweaks", "judge", hooks::skin_misc.m_judge);
 
         READ_INT("keybinds", "menu", gui::menu_keybind);
         overlay::open_widget.FormatString();
@@ -74,6 +75,7 @@ void config::SaveConfig() {
 
     SET_BOOL("skin_tweaks", "fs", hooks::skin_misc.m_fs);
     SET_BOOL("skin_tweaks", "pacemaker", hooks::skin_misc.m_pacemaker);
+    SET_BOOL("skin_tweaks", "judge", hooks::skin_misc.m_judge);
 
     SET_INT("keybinds", "menu", gui::menu_keybind);
 

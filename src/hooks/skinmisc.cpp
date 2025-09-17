@@ -35,14 +35,27 @@ void SkinMisc::OnSliderCmp(safetyhook::Context& ctx)
 
 int SkinMisc::OnDrawNum(LR2::DrawingBuf* drb, LR2::SRCstruct* src, LR2::DSTstruct* dst, LR2::Timer* T, int number, int x, int y)
 {
-	if (src->op1 == 210 || src->op1 == 211 && hooks::skin_misc.m_fs) {
+	SkinMisc& skin_misc = hooks::skin_misc;
+
+	if (src->op1 == 210 || src->op1 == 211 && skin_misc.m_fs) {
 		y = LR2::pGame->skstruct.adjust.judge_y;
 	}
-	if (src->op1 == 108 && LR2::pGame->config.play.play_ghost == 1 && hooks::skin_misc.m_pacemaker) {
+	if (src->op1 == 108 && LR2::pGame->config.play.play_ghost == 1 && skin_misc.m_pacemaker) {
 		y = LR2::pGame->skstruct.adjust.judge_y;
 	}
 
+	if (skin_misc.m_judge && (src->op1 == 210 || src->op1 == 108 || src->op1 == 211)) y += LR2::pGame->skstruct.adjust.note_1p_y;
+
 	return hooks::skin_misc.m_draw_num_hook.call<int>(drb, src, dst, T, number, x, y);
+}
+
+int SkinMisc::OnDrawJudge(LR2::DrawingBuf* drb, LR2::SRCstruct* jsrc, LR2::DSTstruct* jdst, LR2::SRCstruct* csrc, LR2::DSTstruct* cdst, LR2::Timer* T, int combo, int x, int y)
+{
+	SkinMisc& skin_misc = hooks::skin_misc;
+
+	if(skin_misc.m_judge) y += LR2::pGame->skstruct.adjust.note_1p_y;
+
+	return hooks::skin_misc.m_draw_judge_hook.call<int>(drb, jsrc, jdst, csrc, cdst, T, combo, x, y);
 }
 
 void SkinMisc::Init()
@@ -50,4 +63,5 @@ void SkinMisc::Init()
 	m_draw_ln_hook = safetyhook::create_mid(m_offsets.draw_ln, OnDrawLN);
 	m_slider_hook = safetyhook::create_mid(m_offsets.cmp, OnSliderCmp);
 	m_draw_num_hook = safetyhook::create_inline((void*)m_offsets.draw_num, OnDrawNum);
+	m_draw_judge_hook = safetyhook::create_inline((void*)m_offsets.draw_judge, OnDrawJudge);
 }

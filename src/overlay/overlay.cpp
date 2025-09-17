@@ -88,6 +88,8 @@ void overlay::DrawMainWindow()
                 ImGui::SameLine(); HelpMarker("Moves the fast/slow display when judge text is moved.");
                 ImGui::Checkbox("Relative Pacemaker", &hooks::skin_misc.m_pacemaker);
                 ImGui::SameLine(); HelpMarker("Moves the pacemaker when judge text is moved.");
+                ImGui::Checkbox("Relative Judge", &hooks::skin_misc.m_judge);
+                ImGui::SameLine(); HelpMarker("Moves the judge (and associated elements if those tweaks are enabled) when lift is applied.");
                 ImGui::EndTabItem();
             }
 
