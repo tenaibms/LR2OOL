@@ -25,7 +25,7 @@ void Init()
     }
     config::LoadConfig();
 
-    while (!GetAsyncKeyState(VK_END) || !GetAsyncKeyState(VK_ESCAPE)) {
+    while (!GetAsyncKeyState(VK_END)) {
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 
