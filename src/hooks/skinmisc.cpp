@@ -44,7 +44,8 @@ int SkinMisc::OnDrawNum(LR2::DrawingBuf* drb, LR2::SRCstruct* src, LR2::DSTstruc
 		y = LR2::pGame->skstruct.adjust.judge_y;
 	}
 
-	if (skin_misc.m_judge && (src->op1 == 210 || src->op1 == 108 || src->op1 == 211)) y += LR2::pGame->skstruct.adjust.note_1p_y;
+	if (skin_misc.m_judge && (src->op1 == 210 || src->op1 == 108)) y += LR2::pGame->skstruct.adjust.note_1p_y;
+	if (skin_misc.m_judge && (src->op1 == 211 || src->op1 == 128)) y += LR2::pGame->skstruct.adjust.note_2p_y;
 
 	return hooks::skin_misc.m_draw_num_hook.call<int>(drb, src, dst, T, number, x, y);
 }
@@ -52,9 +53,14 @@ int SkinMisc::OnDrawNum(LR2::DrawingBuf* drb, LR2::SRCstruct* src, LR2::DSTstruc
 int SkinMisc::OnDrawJudge(LR2::DrawingBuf* drb, LR2::SRCstruct* jsrc, LR2::DSTstruct* jdst, LR2::SRCstruct* csrc, LR2::DSTstruct* cdst, LR2::Timer* T, int combo, int x, int y)
 {
 	SkinMisc& skin_misc = hooks::skin_misc;
+	LR2::skstruct& sk = LR2::pGame->skstruct;
 
-	if(skin_misc.m_judge) y += LR2::pGame->skstruct.adjust.note_1p_y;
-
+	if (skin_misc.m_judge) {
+		if (jsrc == &sk.src_NOWJUDGE_1P[0] || jsrc == &sk.src_NOWJUDGE_1P[1] || jsrc == &sk.src_NOWJUDGE_1P[2] || jsrc == &sk.src_NOWJUDGE_1P[3] || jsrc == &sk.src_NOWJUDGE_1P[4] || jsrc == &sk.src_NOWJUDGE_1P[5])
+			y += LR2::pGame->skstruct.adjust.note_1p_y;
+		if (jsrc == &sk.src_NOWJUDGE_2P[0] || jsrc == &sk.src_NOWJUDGE_2P[1] || jsrc == &sk.src_NOWJUDGE_2P[2] || jsrc == &sk.src_NOWJUDGE_2P[3] || jsrc == &sk.src_NOWJUDGE_2P[4] || jsrc == &sk.src_NOWJUDGE_2P[5])
+			y += LR2::pGame->skstruct.adjust.note_2p_y;
+	}
 	return hooks::skin_misc.m_draw_judge_hook.call<int>(drb, jsrc, jdst, csrc, cdst, T, combo, x, y);
 }
 

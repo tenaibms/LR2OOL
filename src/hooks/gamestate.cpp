@@ -1,6 +1,7 @@
 #include "gamestate.h"
 #include "features/hiterror.h"
 #include "hooks/srcnumber.h"
+#include "hooks/skinparsing.h"
 
 void Gamestate::Init()
 {
@@ -17,4 +18,6 @@ void Gamestate::OnGameStateChange(safetyhook::Context& ctx)
         hiterror::Reset();
         hooks::src_number.Reset();
     }
+
+    hooks::skin_parsing.Reset();
 }

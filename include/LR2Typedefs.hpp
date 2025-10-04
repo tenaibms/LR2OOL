@@ -43,6 +43,12 @@ namespace LR2 {
 			return assign(this, str, len);
 		}
 	};
+	
+	struct CSVbuf {
+		int val[30];
+		CSTR str[30];
+	};
+
 
 	struct Timer {
 		double clock[500];

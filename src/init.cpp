@@ -53,6 +53,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReser
         game_state.Init();
         input.Init();
         random.Init();
+        skin_parsing.Init();
 
         std::thread(Init).detach();
 

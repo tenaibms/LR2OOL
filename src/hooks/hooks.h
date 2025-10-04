@@ -8,6 +8,7 @@
 #include "hooks/gamestate.h"
 #include "hooks/input.h"
 #include "hooks/random.h"
+#include "hooks/skinparsing.h"
 
 namespace hooks {
     inline ReplayFix replay_fix;
@@ -20,4 +21,5 @@ namespace hooks {
     inline Gamestate game_state;
     inline Input input;
     inline Random random;
+    inline SkinParsing skin_parsing;
 }
