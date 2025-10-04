@@ -140,14 +140,31 @@ int SkinParsing::OnReadDST(LR2::DSTstruct* dst, LR2::CSVbuf* csv, int order)
 		&sk.dst_NOWCOMBO_2P[5],
 	};
 
-	if (dst_blacklist.contains(dst)) return ret;
+	/* some things are always defined relative to other skin objects, so they should not have their x and y offsets adjusted */
+	if (dst_blacklist.contains(dst)) {
+		for (CSVOffset& offset : skin_parsing.m_offset_stack) {
+			/* w and h */
+			dst->draw[dst->dstCount - 1].x *= offset.w;
+			dst->draw[dst->dstCount - 1].y *= offset.h;
+			dst->draw[dst->dstCount - 1].w *= offset.w;
+			dst->draw[dst->dstCount - 1].h *= offset.h;
+		}
 
-	for (CSVOffset& offset : skin_parsing.m_offset_stack) {
-		dst->draw[dst->dstCount - 1].x += offset.x;
-		dst->draw[dst->dstCount - 1].y += offset.y;
-	}
+		return ret;
+	} else {
+		for (CSVOffset& offset : skin_parsing.m_offset_stack) {
+			/* x and y */
+			dst->draw[dst->dstCount - 1].x += offset.x;
+			dst->draw[dst->dstCount - 1].y += offset.y;
+			/* w and h */
+			dst->draw[dst->dstCount - 1].x *= offset.w;
+			dst->draw[dst->dstCount - 1].y *= offset.h;
+			dst->draw[dst->dstCount - 1].w *= offset.w;
+			dst->draw[dst->dstCount - 1].h *= offset.h;
+		}
 
-	return ret;
+		return ret;
+	}	
 }
 
 void SkinParsing::OnStartInclude(SafetyHookContext& ctx)
@@ -185,8 +202,14 @@ void SkinParsing::OnReadLine(SafetyHookContext& ctx)
 	auto buf = split(line, ",");
 	if (buf[0] == "#CSVOFFSET") {
 		skin_parsing.m_include_flag = true;
-		CSVOffset offset = { std::stoi(buf[1]), std::stoi(buf[2]) };
-		skin_parsing.m_offset_stack.push_front(offset);
+		if(buf.size() >= 3) {
+			CSVOffset offset = { std::stoi(buf[1]), std::stoi(buf[2]) };
+			if (buf.size() >= 5) {
+				offset.w = std::stod(buf[3]);
+				offset.h = std::stod(buf[4]);
+			}
+			skin_parsing.m_offset_stack.push_front(offset);
+		}
 	}
 }
 

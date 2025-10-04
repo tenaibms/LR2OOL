@@ -18,7 +18,8 @@ private:
 	} m_offsets;
 
 	struct CSVOffset {
-		int x, y;
+		int x = 0, y = 0;
+		double w = 1, h = 1;
 	};
 
 	std::deque<CSVOffset> m_offset_stack;
