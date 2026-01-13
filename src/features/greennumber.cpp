@@ -34,7 +34,7 @@ double GreenNumber::GetWhiteNumber(int player)
 
 double GreenNumber::GetLiftNumber(int player)
 {
-	double line_y = LR2::pGame->skstruct.dst_LINE->draw->y;
+	double line_y = LR2::pGame->skstruct.dst_LINE[0].draw->y;
 	double adjust_y = player == 1 ? LR2::pGame->skstruct.adjust.note_1p_y : LR2::pGame->skstruct.adjust.note_2p_y;
 
 	double lift = (-1 * adjust_y) / line_y;
