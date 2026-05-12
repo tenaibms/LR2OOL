@@ -10,6 +10,7 @@
 #include <windowsx.h>
 
 #include "gui.h"
+#include "dx9.h"
 #include "features/hiterror.h"
 #include "overlay/imguistyle.h"
 #include "overlay/overlay.h"
@@ -166,6 +167,14 @@ void gui::Setup()
 
 void gui::SetupMenu(LPDIRECT3DDEVICE9 device) noexcept
 {
+    auto caps = D3DCAPS9{ };
+    device->GetDeviceCaps(&caps);
+    rtMax = caps.NumSimultaneousRTs;
+
+    auto swapchain = LPDIRECT3DSWAPCHAIN9{ };
+    device->GetSwapChain(0, &swapchain);
+    dx9::present_hook = safetyhook::create_inline((*(uintptr_t**)swapchain)[3], dx9::hook_present);
+
     auto params = D3DDEVICE_CREATION_PARAMETERS{ };
     device->GetCreationParameters(&params);
 
@@ -212,20 +221,25 @@ void gui::Reset(LPDIRECT3DDEVICE9 newDevice)
     D3DDEVICE_CREATION_PARAMETERS params;
     newDevice->GetCreationParameters(&params);
 
-    ImGui_ImplWin32_Shutdown();
-    ImGui_ImplWin32_Init(params.hFocusWindow);
+    if (window != params.hFocusWindow) {
+        ImGui_ImplWin32_Shutdown();
+        ImGui_ImplWin32_Init(params.hFocusWindow);
+        window = params.hFocusWindow;
+    }
 
-    ImGui_ImplDX9_Shutdown();
-    ImGui_ImplDX9_Init(newDevice);
-
-    window = params.hFocusWindow;
-    device = newDevice;
+    if (device != newDevice) {
+        ImGui_ImplDX9_Shutdown();
+        ImGui_ImplDX9_Init(newDevice);
+        device = newDevice;
+    }
 }
 
 void gui::Render()
 {
     ImGui_ImplDX9_NewFrame();
     ImGui_ImplWin32_NewFrame();
+    ImGui::GetIO().DisplaySize = { static_cast<float>(gui::internal_resolution[0]), 
+                                   static_cast<float>(gui::internal_resolution[1]) };
     ImGui::NewFrame();
 
     overlay::Render();
@@ -255,6 +269,19 @@ LRESULT CALLBACK WindowProcess(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
         POINT mouse_pos = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
         mouse_pos.x *= scaling_factor_x;
         mouse_pos.y *= scaling_factor_y;
+
+        float canvasAR = static_cast<float>(gui::internal_resolution[0]) / gui::internal_resolution[1];
+        float outputAR = static_cast<float>(gui::output_resolution[0]) / gui::output_resolution[1];
+        if (canvasAR != outputAR) {
+            bool horizontal = canvasAR > outputAR;
+            auto& pos = horizontal ? mouse_pos.y : mouse_pos.x;
+            float size = horizontal ? gui::output_resolution[1] : gui::output_resolution[0];
+            float scale = size / (size / canvasAR);
+            float& scalePos = horizontal ? scaling_factor_y : scaling_factor_x;
+            pos *= scale;
+            pos -= (size - size / canvasAR) / 2 * scalePos * scale;
+        }
+
         imgui_lParam = MAKELPARAM(mouse_pos.x, mouse_pos.y);
     }
 
@@ -262,7 +289,16 @@ LRESULT CALLBACK WindowProcess(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 
     ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, imgui_lParam);
     if (io.WantCaptureMouse)
-        return 1L;
+        switch (msg) {
+        case WM_LBUTTONDOWN:
+        case WM_LBUTTONUP:
+        case WM_LBUTTONDBLCLK:
+        case WM_RBUTTONDOWN:
+        case WM_RBUTTONUP:
+        case WM_RBUTTONDBLCLK:
+        case WM_MOUSEWHEEL:
+            return 1L;
+        }
 
     return CallWindowProc(gui::original_window_process, hWnd, msg, wParam, lParam);
 }
