@@ -4,9 +4,11 @@
 
 namespace dx9
 {
+    inline SafetyHookInline present_hook = {};
     inline SafetyHookInline end_scene_hook = {};
     inline SafetyHookInline reset_hook = {};
 
+    HRESULT __stdcall hook_present(LPDIRECT3DSWAPCHAIN9 pSwapchain, const RECT* pSourceRect, const RECT* pDestRect, HWND hDestWindowOverride, const RGNDATA* pDirtyRegion, DWORD dwFlags) noexcept;
     HRESULT __stdcall hook_end_scene(IDirect3DDevice9* device) noexcept;
     HRESULT __stdcall hook_reset(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* params);
 

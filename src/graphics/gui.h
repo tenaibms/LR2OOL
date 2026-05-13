@@ -23,7 +23,9 @@ namespace gui {
     inline LPDIRECT3DDEVICE9 device = nullptr;
     inline LPDIRECT3DDEVICE9 dummyDevice = nullptr;
     inline LPDIRECT3D9 d3d9 = nullptr;
-    inline int* internal_resolution = reinterpret_cast<int*>(offsets::internal_resolution);
+    inline int rtMax = 1;
+    inline int internal_resolution[2] = { 640, 480 };
+    inline int output_resolution[2] = { 640, 480 };
 
     bool SetupWindowClass(const char* window_class_name) noexcept;
     void DestroyWindowClass() noexcept;

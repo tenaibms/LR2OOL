@@ -32,7 +32,7 @@ void overlay::DrawMainWindow()
 {
     /* should probably move these format calls to not be done in the rendering loop.. */
     ImGui::SetNextWindowSize(ImVec2(640 - 40, 480 - 40));
-    ImGui::SetNextWindowPos(ImVec2((gui::internal_resolution[0] - 640 + 40) / 2, (gui::internal_resolution[1] - 480 + 40) / 2), ImGuiCond_Once);
+    ImGui::SetNextWindowPos(ImVec2(gui::internal_resolution[0] / 2, gui::internal_resolution[1] / 2), ImGuiCond_Always, { 0.5f, 0.5f });
 
     if (ImGui::Begin(std::format("LR2OOL v{}.{}.{}", version.major, version.minor, version.patch).c_str(), &open, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoSavedSettings )) {
         ImGui::PushItemWidth(ImGui::GetWindowWidth() * 0.5f);
