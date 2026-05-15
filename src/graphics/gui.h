@@ -21,8 +21,9 @@ namespace gui {
 
     // directX stuff
     inline LPDIRECT3DDEVICE9 device = nullptr;
-    inline LPDIRECT3DDEVICE9 dummyDevice = nullptr;
-    inline LPDIRECT3D9 d3d9 = nullptr;
+    inline LPDIRECT3DDEVICE9EX dummyDevice = nullptr;
+    inline LPDIRECT3DSWAPCHAIN9 dummySwapchain = nullptr;
+    inline LPDIRECT3D9EX d3d9 = nullptr;
     inline int rtMax = 1;
     inline int internal_resolution[2] = { 640, 480 };
     inline int output_resolution[2] = { 640, 480 };
