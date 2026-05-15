@@ -84,46 +84,41 @@ bool gui::SetupDirectX() noexcept
         Sleep(10);
     } while (!handle);
 
-    using CreateFn = LPDIRECT3D9(__stdcall*)(UINT);
+    using CreateFn = HRESULT(__stdcall*)(UINT, LPDIRECT3D9EX*);
     CreateFn create = nullptr;
     do { 
         create = reinterpret_cast<CreateFn>(GetProcAddress(
         handle,
-        "Direct3DCreate9"
+        "Direct3DCreate9Ex"
         ));
         Sleep(10);
     } while (!create);
 
-    d3d9 = create(D3D_SDK_VERSION);
+    create(D3D_SDK_VERSION, &d3d9);
 
     if (!d3d9)
         return false;
 
     D3DPRESENT_PARAMETERS params = { };
-    params.BackBufferWidth = 0;
-    params.BackBufferHeight = 0;
-    params.BackBufferFormat = D3DFMT_UNKNOWN;
-    params.BackBufferCount = 0;
-    params.MultiSampleType = D3DMULTISAMPLE_NONE;
-    params.MultiSampleQuality = NULL;
-    params.SwapEffect = D3DSWAPEFFECT_DISCARD;
-    params.hDeviceWindow = window;
     params.Windowed = 1;
-    //params.Windowed = (GetWindowLongPtr(params.hDeviceWindow, GWL_STYLE) & WS_POPUP) != 0 ? FALSE : TRUE;;
-    params.EnableAutoDepthStencil = 0;
-    params.AutoDepthStencilFormat = D3DFMT_UNKNOWN;
-    params.Flags = NULL;
-    params.FullScreen_RefreshRateInHz = 0;
-    params.PresentationInterval = 0;
+    params.SwapEffect = D3DSWAPEFFECT_FLIP;
+    params.BackBufferFormat = D3DFMT_A8R8G8B8;
+    params.BackBufferCount = 1;
+    params.hDeviceWindow = window;
+    params.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
 
-    if (d3d9->CreateDevice(
+    if (d3d9->CreateDeviceEx(
         D3DADAPTER_DEFAULT,
         D3DDEVTYPE_HAL,
         window,
-        D3DCREATE_SOFTWARE_VERTEXPROCESSING | D3DCREATE_DISABLE_DRIVER_MANAGEMENT,
+        D3DCREATE_HARDWARE_VERTEXPROCESSING | D3DCREATE_NOWINDOWCHANGES,
         &params,
+        NULL,
         &dummyDevice
     ) != S_OK)
+        return false;
+
+    if (dummyDevice->GetSwapChain(0, &dummySwapchain) != S_OK)
         return false;
 
     return true;
@@ -135,6 +130,12 @@ void gui::DestroyDirectX() noexcept
     {
         dummyDevice->Release();
         dummyDevice = NULL;
+    }
+
+    if (dummySwapchain)
+    {
+        dummySwapchain->Release();
+        dummySwapchain = NULL;
     }
 
     if (d3d9)
@@ -170,10 +171,6 @@ void gui::SetupMenu(LPDIRECT3DDEVICE9 device) noexcept
     auto caps = D3DCAPS9{ };
     device->GetDeviceCaps(&caps);
     rtMax = caps.NumSimultaneousRTs;
-
-    auto swapchain = LPDIRECT3DSWAPCHAIN9{ };
-    device->GetSwapChain(0, &swapchain);
-    dx9::present_hook = safetyhook::create_inline((*(uintptr_t**)swapchain)[3], dx9::hook_present);
 
     auto params = D3DDEVICE_CREATION_PARAMETERS{ };
     device->GetCreationParameters(&params);
